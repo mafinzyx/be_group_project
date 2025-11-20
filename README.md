@@ -65,32 +65,36 @@ PrestaShop 1.7.8 implementation using Docker
     docker-compose up -d
     ```
 
-4. **Working on the project**\
-    If you've made some changes on the websites panel or you've added products to the website, you need to update `init.sql` with this command, before pushing changes to git.
-
-    ```
-    sudo docker exec prestashop_db mysqldump -u root -pprestashop prestashop > dumps/init.sql
-    ```
-
-    ```
-    git add .
-    git commit -m "Changes to XYZ"
-    git push
-    ```
-    if some changes aren't getting uploaded, check `.gitignore` file.
-
-5. **First time accessing the shop**\
+4. **First time accessing the shop**\
     After starting the environment go to http://localhost:80 
 
+5. **If you changed data in the database (Added Products, etc.)**
+    Firstly dump the database
+    ```bash
+    sudo docker exec prestashop_db mysqldump -u root -pprestashop prestashop > dumps/init.sql
+    ```
+    Then push to git
+    ```bash
+    git add .
+    git commit -m "Added X products and updated DB"
+    git push
+    ```
+
+6. **If you pulled changes from others (Resetting DB)**
+    If someone else modified the database (init.sql), you need to reload it:
+    ```bash
+    docker-compose down -v
+    docker-compose up -d
+    ```
 
 ## Login information
 
 PrestaShop login information:\
-email: ```prestashop@prestashop.com```\
+email: ```prestashop@prestashop.com```
 password: ```prestashop```
 
 Database login information:\
-login: ```prestashop```\
+login: ```prestashop```
 password: ```prestashop```
 
 Configuration information in `docker-compose.yml`
