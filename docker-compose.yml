@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:5.7
+    container_name: prestashop_db
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: prestashop
+      MYSQL_DATABASE: prestashop
+      MYSQL_USER: prestashop
+      MYSQL_PASSWORD: prestashop
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./dumps:/docker-entrypoint-initdb.d
+
+  prestashop:
+    image: prestashop/prestashop:1.7.8
+    container_name: prestashop_web
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - db
+    volumes:
+      - ./html:/var/www/html
+      - ./certs:/etc/ssl/private:ro
+    environment:
+      - DB_SERVER=db
+      - DB_USER=prestashop
+      - DB_PASSWD=prestashop
+      - DB_NAME=prestashop
+      - PS_LANGUAGE=pl
+      - PS_COUNTRY=PL
+      - PS_INSTALL_AUTO=0
+      - PS_DEV_MODE=0
+      - PS_DOMAIN=localhost
+
+volumes:
+  db_data:

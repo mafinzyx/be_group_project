@@ -1,0 +1,21 @@
+# Ignoruj pliki sklepu (Generowane przez Docker)
+html/*
+!html/themes/
+!html/modules/
+!html/override/
+!html/img/
+!html/controllers/
+
+mysql_data/
+.data/
+
+# Ignoruj klucze SSL (każdy generuje własne)
+certs/*.key
+
+# Ignoruj konfiguracje kompilatorów
+.DS_Store
+.idea/
+.vscode/
+
+# ZRZUT BAZY DANYCH
+!dumps/
