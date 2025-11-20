@@ -66,9 +66,12 @@ PrestaShop 1.7.8 implementation using Docker
     ```
 
 4. **First time accessing the shop**\
-    After starting the environment go to http://localhost:80 
+    After starting the environment go to:\
+    http://localhost:80 \
+    For admin control panel:\
+    http://localhost:80/admin191rnbbnl
 
-5. **If you changed data in the database (Added Products, etc.)**
+5. **If you changed data in the database (Added Products, etc.)**\
     Firstly dump the database
     ```bash
     sudo docker exec prestashop_db mysqldump -u root -pprestashop prestashop > dumps/init.sql
@@ -80,7 +83,7 @@ PrestaShop 1.7.8 implementation using Docker
     git push
     ```
 
-6. **If you pulled changes from others (Resetting DB)**
+6. **If you pulled changes from others (Resetting DB)**\
     If someone else modified the database (init.sql), you need to reload it:
     ```bash
     docker-compose down -v
