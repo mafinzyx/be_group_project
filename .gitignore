@@ -1,22 +1,15 @@
-# Ignoruj pliki sklepu (Generowane przez Docker)
-html/*
-!html/themes/
-!html/modules/
-!html/override/
-!html/img/
-!html/controllers/
-!html/app/config/parameters.php
+# 1. Pliki tymczasowe PrestaShop
+html/var/cache/
+html/var/logs/
+html/var/tmp/
 
+# 2. Baza danych (pliki binarne)
 mysql_data/
 .data/
 
-# Ignoruj klucze SSL (każdy generuje własne)
+# 3. Klucze SSL (każdy generuje swoje)
 certs/*.key
 
-# Ignoruj konfiguracje kompilatorów
 .DS_Store
 .idea/
 .vscode/
-
-# ZRZUT BAZY DANYCH
-!dumps/
