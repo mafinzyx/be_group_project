@@ -5,6 +5,7 @@ html/*
 !html/override/
 !html/img/
 !html/controllers/
+!html/app/config/parameters.php
 
 mysql_data/
 .data/

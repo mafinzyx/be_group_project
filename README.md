@@ -47,6 +47,18 @@ PrestaShop 1.7.8 implementation using Docker
     ```
     Usually this takes me around up to a minute, first startup takes longer.
 
+    **If you are getting "python" errors** try using:
+    ```bash
+    sudo apt install python3-setuptools
+    ```
+    and then use `docker-compose up -d` again.
+
+    After generating the base files use this command to fix the access to files
+
+    ```bash
+    sudo chmod -R 777 html
+    ```
+
     If you ever need to reset docker or the database use this:
     ```bash
     docker-compose down -v
@@ -67,8 +79,9 @@ PrestaShop 1.7.8 implementation using Docker
     ```
     if some changes aren't getting uploaded, check `.gitignore` file.
 
-5. **Access the shop**\
-    http://localhost:80
+5. **First time accessing the shop**\
+    After starting the environment go to http://localhost:80 
+
 
 ## Login information
 
