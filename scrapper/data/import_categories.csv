@@ -1,0 +1,136 @@
+ID;Active (0/1);Name;Parent category;Root category (0/1);Description
+100;1;Wina;Strona główna;0;Kategoria Wina pobrana automatycznie.
+101;1;Wytrawność;Wina;0;Podkategoria Wytrawność.
+102;1;Słodkie;Wina;0;Podkategoria Słodkie.
+103;1;Półsłodkie;Wina;0;Podkategoria Półsłodkie.
+104;1;Półwytrawne;Wina;0;Podkategoria Półwytrawne.
+105;1;Delikatnie wytrawne;Wina;0;Podkategoria Delikatnie wytrawne.
+106;1;Wytrawne;Wina;0;Podkategoria Wytrawne.
+107;1;Szczepy;Wina;0;Podkategoria Szczepy.
+108;1;Białe;Wina;0;Podkategoria Białe.
+109;1;Sauvignon Blanc;Wina;0;Podkategoria Sauvignon Blanc.
+110;1;Chardonnay;Wina;0;Podkategoria Chardonnay.
+111;1;Riesling;Wina;0;Podkategoria Riesling.
+112;1;Pinot Grigio;Wina;0;Podkategoria Pinot Grigio.
+113;1;Gruner Veltliner;Wina;0;Podkategoria Gruner Veltliner.
+114;1;Chenin Blanc;Wina;0;Podkategoria Chenin Blanc.
+115;1;Czerwone;Wina;0;Podkategoria Czerwone.
+116;1;Primitivo;Wina;0;Podkategoria Primitivo.
+117;1;Shiraz/Syrah;Wina;0;Podkategoria Shiraz/Syrah.
+118;1;Monastrell;Wina;0;Podkategoria Monastrell.
+119;1;Cabernet Sauvignon;Wina;0;Podkategoria Cabernet Sauvignon.
+120;1;Malbec;Wina;0;Podkategoria Malbec.
+121;1;Sangiovese;Wina;0;Podkategoria Sangiovese.
+122;1;Merlot;Wina;0;Podkategoria Merlot.
+123;1;Nebbiolo;Wina;0;Podkategoria Nebbiolo.
+124;1;Pinot Noir;Wina;0;Podkategoria Pinot Noir.
+125;1;Grenache Noir;Wina;0;Podkategoria Grenache Noir.
+126;1;Barbera;Wina;0;Podkategoria Barbera.
+127;1;Rodzaj;Wina;0;Podkategoria Rodzaj.
+128;1;Wina bezalkoholowe;Wina;0;Podkategoria Wina bezalkoholowe.
+129;1;wina bezalkoholowe białe;Wina;0;Podkategoria wina bezalkoholowe białe.
+130;1;wina bezalkoholowe czerwone;Wina;0;Podkategoria wina bezalkoholowe czerwone.
+131;1;wina bezalkoholowe różowe;Wina;0;Podkategoria wina bezalkoholowe różowe.
+132;1;wina bezalkoholowe musujące;Wina;0;Podkategoria wina bezalkoholowe musujące.
+133;1;Wino białe;Wina;0;Podkategoria Wino białe.
+134;1;lekkie i subtelne;Wina;0;Podkategoria lekkie i subtelne.
+135;1;dojrzałe i aksamitne;Wina;0;Podkategoria dojrzałe i aksamitne.
+136;1;świeże i orzeźwiające;Wina;0;Podkategoria świeże i orzeźwiające.
+137;1;wyraziste i skoncentrowane;Wina;0;Podkategoria wyraziste i skoncentrowane.
+138;1;Wino czerwone;Wina;0;Podkategoria Wino czerwone.
+139;1;owocowe i świeże;Wina;0;Podkategoria owocowe i świeże.
+140;1;aromatyczne i dojrzałe;Wina;0;Podkategoria aromatyczne i dojrzałe.
+141;1;treściwe i beczkowe;Wina;0;Podkategoria treściwe i beczkowe.
+142;1;Wino różowe;Wina;0;Podkategoria Wino różowe.
+143;1;Wino musujące;Wina;0;Podkategoria Wino musujące.
+144;1;Szampan / Champagne;Wina;0;Podkategoria Szampan / Champagne.
+145;1;Cremant;Wina;0;Podkategoria Cremant.
+146;1;Prosecco i Valdobbiadene;Wina;0;Podkategoria Prosecco i Valdobbiadene.
+147;1;Cava;Wina;0;Podkategoria Cava.
+148;1;Frizzante;Wina;0;Podkategoria Frizzante.
+149;1;Fragolino;Wina;0;Podkategoria Fragolino.
+150;1;Lambrusco;Wina;0;Podkategoria Lambrusco.
+151;1;Wino wzmacniane/deserowe;Wina;0;Podkategoria Wino wzmacniane/deserowe.
+152;1;Wino wegańskie;Wina;0;Podkategoria Wino wegańskie.
+153;1;Nowości;Wina;0;Podkategoria Nowości.
+154;1;Appassimento;Wina;0;Podkategoria Appassimento.
+155;1;Wina ekologiczne i organiczne;Wina;0;Podkategoria Wina ekologiczne i organiczne.
+156;1;Wina zrównoważone;Wina;0;Podkategoria Wina zrównoważone.
+157;1;Cena;Wina;0;Podkategoria Cena.
+158;1;5,00 - 25,00 zł;Wina;0;Podkategoria 5,00 - 25,00 zł.
+159;1;25,01 - 40,00 zł;Wina;0;Podkategoria 25,01 - 40,00 zł.
+160;1;40,01 - 60,00 zł;Wina;0;Podkategoria 40,01 - 60,00 zł.
+161;1;60,01 - 100,00 zł;Wina;0;Podkategoria 60,01 - 100,00 zł.
+162;1;100,01 - 200,00 zł;Wina;0;Podkategoria 100,01 - 200,00 zł.
+163;1;powyżej 200 zł;Wina;0;Podkategoria powyżej 200 zł.
+164;1;Kraj;Wina;0;Podkategoria Kraj.
+165;1;Chile;Wina;0;Podkategoria Chile.
+166;1;Francja;Wina;0;Podkategoria Francja.
+167;1;Chablis;Wina;0;Podkategoria Chablis.
+168;1;Chateauneuf-du-Pape;Wina;0;Podkategoria Chateauneuf-du-Pape.
+169;1;Bordeaux/Medoc;Wina;0;Podkategoria Bordeaux/Medoc.
+170;1;Bourgogne;Wina;0;Podkategoria Bourgogne.
+171;1;Pomerol;Wina;0;Podkategoria Pomerol.
+172;1;Saint-Emilion;Wina;0;Podkategoria Saint-Emilion.
+173;1;Hiszpania;Wina;0;Podkategoria Hiszpania.
+174;1;Włochy;Wina;0;Podkategoria Włochy.
+175;1;Amarone;Wina;0;Podkategoria Amarone.
+176;1;Barolo;Wina;0;Podkategoria Barolo.
+177;1;Brunello;Wina;0;Podkategoria Brunello.
+178;1;Portugalia;Wina;0;Podkategoria Portugalia.
+179;1;Nowa Zelandia;Wina;0;Podkategoria Nowa Zelandia.
+180;1;Polska;Wina;0;Podkategoria Polska.
+181;1;Pokaż wszystko;Wina;0;Podkategoria Pokaż wszystko.
+182;1;Top 10 win - ranking;Wina;0;Podkategoria Top 10 win - ranking.
+183;1;Najczęściej kupowane;Wina;0;Podkategoria Najczęściej kupowane.
+184;1;Wino czerwone Bio 3 Passo Rosso włoskie wytrawne 0,75 L;Wina;0;Podkategoria Wino czerwone Bio 3 Passo Rosso włoskie wytrawne 0,75 L.
+185;1;Wino białe Via Mare Trebbiano-Pinot Grigio Puglia IGT włoskie wytrawne 0,75 L;Wina;0;Podkategoria Wino białe Via Mare Trebbiano-Pinot Grigio Puglia IGT włoskie wytrawne 0,75 L.
+186;1;Sikulo Bianco Tre Colonne Terre Siciliane IGP 0,75 L;Wina;0;Podkategoria Sikulo Bianco Tre Colonne Terre Siciliane IGP 0,75 L.
+187;1;Wino białe La Marina Cuvee Oceane IGP francuskie wytrawne 0,75 L;Wina;0;Podkategoria Wino białe La Marina Cuvee Oceane IGP francuskie wytrawne 0,75 L.
+188;1;Wino czerwone Via Mare Sangiovese-Primitivo Puglia IGT włoskie wytrawne 0,75 L;Wina;0;Podkategoria Wino czerwone Via Mare Sangiovese-Primitivo Puglia IGT włoskie wytrawne 0,75 L.
+189;1;Wino białe Pavillon Des 3 Arches Chardonnay IGP francuskie wytrawne 0,75 L;Wina;0;Podkategoria Wino białe Pavillon Des 3 Arches Chardonnay IGP francuskie wytrawne 0,75 L.
+190;1;Marlborough Sun Sauvignon Blanc 0,75 L;Wina;0;Podkategoria Marlborough Sun Sauvignon Blanc 0,75 L.
+191;1;Wino czerwone Amarone della Valpolicella Centenero DOCG włoskie półwytrawne 0,75 L;Wina;0;Podkategoria Wino czerwone Amarone della Valpolicella Centenero DOCG włoskie półwytrawne 0,75 L.
+192;1;Baccolo Bianco Puglia IGT 0,75 L;Wina;0;Podkategoria Baccolo Bianco Puglia IGT 0,75 L.
+193;1;Sikulo Rosso Tre Colonne Terre Siciliane IGP 0,75 L;Wina;0;Podkategoria Sikulo Rosso Tre Colonne Terre Siciliane IGP 0,75 L.
+194;1;Promocje;Strona główna;0;Kategoria Promocje pobrana automatycznie.
+195;1;Okazje miesiąca!;Promocje;0;Podkategoria Okazje miesiąca!.
+196;1;Wyprzedaż;Promocje;0;Podkategoria Wyprzedaż.
+197;1;Wina do 30 zł;Strona główna;0;Kategoria Wina do 30 zł pobrana automatycznie.
+198;1;Delikatesy;Strona główna;0;Kategoria Delikatesy pobrana automatycznie.
+199;1;Konfitury;Delikatesy;0;Podkategoria Konfitury.
+200;1;Kawy;Delikatesy;0;Podkategoria Kawy.
+201;1;Oliwki;Delikatesy;0;Podkategoria Oliwki.
+202;1;Oliwy;Delikatesy;0;Podkategoria Oliwy.
+203;1;Pasztety;Delikatesy;0;Podkategoria Pasztety.
+204;1;Inne specjały;Delikatesy;0;Podkategoria Inne specjały.
+205;1;Tapenada;Delikatesy;0;Podkategoria Tapenada.
+206;1;Akcesoria;Delikatesy;0;Podkategoria Akcesoria.
+207;1;Pesto;Delikatesy;0;Podkategoria Pesto.
+208;1;Słodycze;Delikatesy;0;Podkategoria Słodycze.
+209;1;Foie Gras;Delikatesy;0;Podkategoria Foie Gras.
+210;1;Prezenty;Strona główna;0;Kategoria Prezenty pobrana automatycznie.
+211;1;Zestawy prezentowe;Prezenty;0;Podkategoria Zestawy prezentowe.
+212;1;Wino na prezent;Prezenty;0;Podkategoria Wino na prezent.
+213;1;Opakowania na wino;Prezenty;0;Podkategoria Opakowania na wino.
+214;1;Na 1 butelkę;Prezenty;0;Podkategoria Na 1 butelkę.
+215;1;Na 2 butelki;Prezenty;0;Podkategoria Na 2 butelki.
+216;1;Na 3 i więcej butelek;Prezenty;0;Podkategoria Na 3 i więcej butelek.
+217;1;Skrzynki drewniane;Prezenty;0;Podkategoria Skrzynki drewniane.
+218;1;Alkohole;Strona główna;0;Kategoria Alkohole pobrana automatycznie.
+219;1;Armagnac;Alkohole;0;Podkategoria Armagnac.
+220;1;Brandy;Alkohole;0;Podkategoria Brandy.
+221;1;Cognac;Alkohole;0;Podkategoria Cognac.
+222;1;Wódka;Alkohole;0;Podkategoria Wódka.
+223;1;Rum, Tequila;Alkohole;0;Podkategoria Rum, Tequila.
+224;1;Whisky, Whiskey, Bourbon;Alkohole;0;Podkategoria Whisky, Whiskey, Bourbon.
+225;1;Grappa;Alkohole;0;Podkategoria Grappa.
+226;1;Likiery;Alkohole;0;Podkategoria Likiery.
+227;1;Nalewki;Alkohole;0;Podkategoria Nalewki.
+228;1;Bittersy;Alkohole;0;Podkategoria Bittersy.
+229;1;Gin;Alkohole;0;Podkategoria Gin.
+230;1;Śliwowica;Alkohole;0;Podkategoria Śliwowica.
+231;1;Okowita;Alkohole;0;Podkategoria Okowita.
+232;1;Aperitif;Alkohole;0;Podkategoria Aperitif.
+233;1;Zestawy win;Strona główna;0;Kategoria Zestawy win pobrana automatycznie.
+234;1;Wina na wesele;Strona główna;0;Kategoria Wina na wesele pobrana automatycznie.
