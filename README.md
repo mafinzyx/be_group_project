@@ -31,7 +31,7 @@ PrestaShop 1.7.8 implementation using Docker
 1. **Clone the repository**
     ```bash
     git clone https://github.com/mafinzyx/be_group_project.git
-    cd ./be_group_project
+    cd ./be_group_project/prestashop
     ```
 
 2. **Generate SSL certificates**
