@@ -40,20 +40,6 @@
       {hook h='displayAfterBodyOpeningTag'}
     {/block}
 
-    {block name='age_verification'}
-      <div id="age-verification-modal" class="age-verification-overlay">
-        <div class="age-verification-modal">
-          <h2>Strona przeznaczona tylko dla osób pełnoletnich.</h2>
-          <p class="age-question">Masz ukończone 18 lat?</p>
-          <div class="age-verification-buttons">
-            <button id="age-no" class="age-btn age-btn-no">Nie</button>
-            <button id="age-yes" class="age-btn age-btn-yes">Tak</button>
-          </div>
-          <p class="age-disclaimer">Mając na uwadze obowiązujące przepisy prawa oraz dobro użytkowników, informacje zawarte w ramach serwisu kierowane są wyłącznie do osób pełnoletnich, dlatego też mamy obowiązek zweryfikować wiek osób wchodzących na naszą stronę.</p>
-        </div>
-      </div>
-    {/block}
-
     <main>
       {block name='product_activation'}
         {include file='catalog/_partials/product-activation.tpl'}

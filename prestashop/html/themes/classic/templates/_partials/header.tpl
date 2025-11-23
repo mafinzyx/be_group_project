@@ -29,20 +29,25 @@
 {/block}
 
 {block name='header_nav'}
-  <nav class="header-nav dobrewina-nav">
+  <nav class="header-nav">
     <div class="container">
       <div class="row">
-        <div class="col-12">
-          <div class="header-nav-links">
-            <a href="#" class="nav-link">O Firmie</a>
-            <a href="#" class="nav-link">Warsztaty winiarskie</a>
-            <a href="#" class="nav-link">Kontakt z nami</a>
-            <a href="#" class="nav-link">Blog</a>
-            <a href="#" class="nav-link">Nasze sklepy</a>
+        <div class="hidden-sm-down">
+          <div class="col-md-5 col-xs-12">
+            {hook h='displayNav1'}
           </div>
-          <div class="header-nav-user">
-            <a href="#" class="nav-link">Zaloguj się / Zarejestruj się</a>
+          <div class="col-md-7 right-nav">
+              {hook h='displayNav2'}
           </div>
+        </div>
+        <div class="hidden-md-up text-sm-center mobile">
+          <div class="float-xs-left" id="menu-icon">
+            <i class="material-icons d-inline">&#xE5D2;</i>
+          </div>
+          <div class="float-xs-right" id="_mobile_cart"></div>
+          <div class="float-xs-right" id="_mobile_user_info"></div>
+          <div class="top-logo" id="_mobile_logo"></div>
+          <div class="clearfix"></div>
         </div>
       </div>
     </div>
@@ -50,32 +55,22 @@
 {/block}
 
 {block name='header_top'}
-  <div class="header-top dobrewina-header">
+  <div class="header-top">
     <div class="container">
-      <div class="row align-items-center">
-        <div class="col-md-3 col-sm-12" id="_desktop_logo">
+       <div class="row">
+        <div class="col-md-2 hidden-sm-down" id="_desktop_logo">
           {if $shop.logo_details}
             {if $page.page_name == 'index'}
-              <h1 class="dobrewina-logo">
+              <h1>
                 {renderLogo}
               </h1>
             {else}
-              <div class="dobrewina-logo">
-                {renderLogo}
-              </div>
+              {renderLogo}
             {/if}
           {/if}
         </div>
-        <div class="col-md-6 col-sm-12 dobrewina-search">
-          {hook h='displaySearch'}
-        </div>
-        <div class="col-md-3 col-sm-12 dobrewina-header-right">
+        <div class="header-top-right col-md-10 col-sm-12 position-static">
           {hook h='displayTop'}
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12 dobrewina-main-menu">
-          {hook h='displayNavFullWidth'}
         </div>
       </div>
       <div id="mobile_top_menu_wrapper" class="row hidden-md-up" style="display:none;">
@@ -88,4 +83,5 @@
       </div>
     </div>
   </div>
+  {hook h='displayNavFullWidth'}
 {/block}
