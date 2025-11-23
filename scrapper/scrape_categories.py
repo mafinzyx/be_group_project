@@ -306,6 +306,66 @@ def scrape_products_by_category(category_name, category_url):
     return all_product_details
 
 
+def scrape_product_urls_and_categories(categories_data):
+    """
+    Faza 1: Iteruje po WSZYSTKICH kategoriach/podkategoriach i tworzy mapę
+    Product ID -> lista kategorii. Nie pobiera pełnych detali.
+    """
+    product_category_map = {}
+
+    processed_list_urls = set()
+
+    for category in categories_data:
+        category_url = category.get("URL")
+        category_name = category.get("Name")
+
+        if '/content/' in category_url or not category_url:
+            continue
+
+        list_base_url = category_url.split('?')[0]
+
+        if list_base_url in processed_list_urls:
+            continue
+
+        processed_list_urls.add(list_base_url)
+
+        current_page_url = category_url
+        page_counter = 0
+
+        while current_page_url:
+            page_soup = get_soup(current_page_url)
+            if not page_soup:
+                break
+
+            page_counter += 1
+            print(f" -> Mapowanie produktów: {category_name}, strona {page_counter} ({current_page_url})")
+
+            product_link_elements = page_soup.find_all('a', class_='product-title')
+
+            for link in product_link_elements:
+                product_url = link.get('href')
+                try:
+                    product_id = product_url.split('-')[-1].split('.')[0]
+                except (AttributeError, IndexError):
+                    continue
+
+                if product_id not in product_category_map:
+                    product_category_map[product_id] = {
+                        "URL": product_url,
+                        "Categories": []
+                    }
+
+                if category_name not in product_category_map[product_id]["Categories"]:
+                    product_category_map[product_id]["Categories"].append(category_name)
+
+            pagination_next = page_soup.find('a', class_='js-search-link', rel='next')
+            if pagination_next and pagination_next.get('href'):
+                current_page_url = pagination_next.get('href')
+            else:
+                current_page_url = None
+
+    return product_category_map
+
 def run_scraper():
     """Główny punkt wejścia do skryptu."""
     print("Rozpoczęcie scrapowania...")
@@ -315,34 +375,30 @@ def run_scraper():
         print("Nie udało się pobrać kategorii. Zakończenie.")
         return
 
-    # Logika dla kategorii liści
-    parent_names = {c['Parent category'] for c in categories_data if c['Parent category'] != 'Strona główna'}
-    leaf_categories = [cat for cat in categories_data if
-                       cat['Name'] not in parent_names and cat['Root category (0/1)'] == 0]
+    print("\n--- FAZA 1: MAPOWANIE PRODUKTÓW DO KATEGORII ---")
+    product_map = scrape_product_urls_and_categories(categories_data)
 
-    print(
-        f"Znaleziono {len(categories_data)} kategorii. Zredukowano do {len(leaf_categories)} unikalnych kategorii 'liści' do scrapowania produktów.")
+    if not product_map:
+        print("Nie znaleziono żadnych produktów do mapowania.")
+        return
 
-    all_products = []
-    processed_urls = set()
+    print(f"\n--- FAZA 2: POBIERANIE DETALI DLA {len(product_map)} UNIKALNYCH PRODUKTÓW ---")
+    final_products = []
 
-    for category in leaf_categories:
-        category_url = category.get("URL")
-        category_name = category.get("Name")
+    for product_id, data_item in product_map.items():
+        product_url = data_item['URL']
 
-        if category_url in processed_urls or '/content/' in category_url:
-            continue
+        details = scrape_single_product_details(product_url)
 
-        processed_urls.add(category_url)
+        if details:
+            details["Product ID"] = product_id
 
-        print(f"\n--- Rozpoczęcie pobierania produktów dla kategorii LIŚCIA: {category_name} ({category_url}) ---")
-        products = scrape_products_by_category(category_name, category_url)
-        all_products.extend(products)
+            details["Category"] = " | ".join(data_item["Categories"])
 
-    if all_products:
-        unique_products_map = {p["Product ID"]: p for p in all_products}
-        final_products = list(unique_products_map.values())
+            final_products.append(details)
+            print(f" -> Pobrane detale i kategorie dla: {details.get('Name', 'N/A')}")
 
+    if final_products:
         print(f"\nZebrano łącznie {len(final_products)} unikalnych rekordów produktów.")
 
         with open(OUTPUT_FILE_PRODUCTS, mode='w', newline='', encoding='utf-8') as file:
@@ -350,7 +406,7 @@ def run_scraper():
             writer.writeheader()
             writer.writerows(final_products)
 
-        print(f"\n Scraping zakończony pomyślnie! Dane produktów zapisano do {OUTPUT_FILE_PRODUCTS}")
+        print(f"\n✅ Scraping zakończony pomyślnie! Dane produktów zapisano do {OUTPUT_FILE_PRODUCTS}")
     else:
         print("\nNie znaleziono żadnych produktów do zapisania.")
 
@@ -358,5 +414,5 @@ def run_scraper():
 if __name__ == "__main__":
     TEST_URL = "https://dobrewina.pl/wino-biale/361-wino-biale-la-marina-cuvee-oceane-igp-francuskie-wytrawne-075-l-3760094286557.html"
 
-    test_single_product(TEST_URL)
-    # run_scraper()"
+    # test_single_product(TEST_URL)
+    run_scraper()
