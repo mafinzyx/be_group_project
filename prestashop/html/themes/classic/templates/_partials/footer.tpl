@@ -29,8 +29,53 @@
     {/block}
   </div>
 </div>
-<div class="footer-container">
+<div class="footer-container dobrewina-footer">
   <div class="container">
+    <div class="row">
+      <div class="col-md-3 col-sm-6">
+        <h4>WG RODZAJU WINA</h4>
+        <ul>
+          <li><a href="#">Wina czerwone</a></li>
+          <li><a href="#">Wina białe</a></li>
+          <li><a href="#">Wina różowe</a></li>
+          <li><a href="#">Wina musujące</a></li>
+          <li><a href="#">Wina bezalkoholowe</a></li>
+          <li><a href="#">Wina wegańskie</a></li>
+          <li><a href="#">Wina wzmacniane</a></li>
+        </ul>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <h4>WG POCHODZENIA WINA</h4>
+        <ul>
+          <li><a href="#">Wina włoskie</a></li>
+          <li><a href="#">Wina portugalskie</a></li>
+          <li><a href="#">Wina polskie</a></li>
+          <li><a href="#">Wina francuskie</a></li>
+          <li><a href="#">Wina hiszpańskie</a></li>
+          <li><a href="#">Wina niemieckie</a></li>
+        </ul>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <h4>WARSZTATY WINIARSKIE</h4>
+        <ul>
+          <li><a href="#">O nas - Warsztaty</a></li>
+          <li><a href="#">Nasze warsztaty</a></li>
+          <li><a href="#">Warsztaty dla firm</a></li>
+          <li><a href="#">Prywatne imprezy</a></li>
+        </ul>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <h4>ZAKUPY</h4>
+        <ul>
+          <li><a href="#">Krok po kroku</a></li>
+          <li><a href="#">Jak czytać legendę</a></li>
+          <li><a href="#">Sposób płatności</a></li>
+          <li><a href="#">Sposób odbioru / realizacji</a></li>
+          <li><a href="#">Klub dobrewina.pl</a></li>
+          <li><a href="#">Kontakt</a></li>
+        </ul>
+      </div>
+    </div>
     <div class="row">
       {block name='hook_footer'}
         {hook h='displayFooter'}
@@ -43,12 +88,24 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <p class="text-sm-center">
+        <div class="footer-contact">
+          <p><strong>Dobre Wina Sp. z o.o.</strong></p>
+          <p>+48 664 159 023</p>
+          <p>sklep@dobrewina.pl</p>
+          <p>ul. Wyczółki 46, 02-820 Warszawa, Polska</p>
+        </div>
+        <p class="text-sm-center footer-copyright">
           {block name='copyright_link'}
-            <a href="https://www.prestashop.com" target="_blank" rel="noopener noreferrer nofollow">
-              {l s='%copyright% %year% - Ecommerce software by %prestashop%' sprintf=['%prestashop%' => 'PrestaShop™', '%year%' => 'Y'|date, '%copyright%' => '©'] d='Shop.Theme.Global'}
+            <a href="#" target="_blank" rel="noopener noreferrer nofollow">
+              © Copyright - {date('Y')}
             </a>
           {/block}
+        </p>
+        <p class="text-sm-center footer-links">
+          <a href="#">Polityka prywatności</a> | 
+          <a href="#">Regulamin</a> | 
+          <a href="#">Mapa strony</a> | 
+          <a href="#">Blog</a>
         </p>
       </div>
     </div>
