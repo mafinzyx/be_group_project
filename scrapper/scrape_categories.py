@@ -147,6 +147,7 @@ def scrape_single_product_details(product_url):
         return None
 
     data = {}
+    grape_varieties_list = []
 
     for field in PRODUCT_FIELDNAMES:
         data[field] = "N/A"
@@ -213,24 +214,30 @@ def scrape_single_product_details(product_url):
                     data['Pairing (Polecane do)'] = ", ".join(pairing_list) if pairing_list else data[
                         'Pairing (Polecane do)']
 
+                # ZMIANA: Kumulacyjna logika dla Szczepów
+                elif key in ['Szczep', 'Szczep(y)']:
+                    # Używamy prostego tekstu, ponieważ każdy szczep ma już osobny blok item.
+                    # Wartość jest czyszczona i dodawana do listy.
+                    cleaned_grape = value_text.strip()
+                    if cleaned_grape:
+                        grape_varieties_list.append(cleaned_grape)
+
                 # Mapowanie pozostałych kluczy
                 elif value_text and value_text != 'N/A':
                     if key == 'Kraj':
                         data['Country'] = value_text
                     elif key == 'Region':
                         data['Region'] = value_text
-
-                    # Szczepy
-                    elif key in ['Szczep', 'Szczepy']:
-                        grape_names = [t.strip() for t in value_tag.stripped_strings if t.strip()]
-                        data['Grape Varieties (Szczepy)'] = ", ".join(grape_names)
-
                     elif key == 'Rodzaj':
                         data['Winetype (Rodzaj)'] = value_text
                     elif key == 'Wytrawność':
                         data['Dryness (Wytrawność)'] = value_text
                     elif key == 'Zawartość alkoholu':
                         data['Alcohol %'] = value_text
+
+    # KROK FINALNY: ZAPIS KILKU SZCZEPÓW POZA PĘTLĄ
+    if grape_varieties_list:
+        data['Grape Varieties (Szczepy)'] = ", ".join(grape_varieties_list)
 
     return data
 
@@ -352,4 +359,4 @@ if __name__ == "__main__":
     TEST_URL = "https://dobrewina.pl/wino-biale/361-wino-biale-la-marina-cuvee-oceane-igp-francuskie-wytrawne-075-l-3760094286557.html"
 
     test_single_product(TEST_URL)
-    # run_scraper()
+    # run_scraper()"
