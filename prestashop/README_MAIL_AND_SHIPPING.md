@@ -18,6 +18,8 @@ php /var/www/html/send_test_debug.php         # uruchamia Mail::send z debugiem
 ```
 - Możesz też w Adminie PrestaShop: `Shop parameters -> General -> Email` i kliknąć "Send test email" — wynik zobaczysz w MailHog.
 
+Dodalem dodatkowo strone dla sprawdzenia listy mailow, w footer dodalem przycisk "MOJE MAILY" ktory pozwala przejrec historie wszystkich mailow
+
 3) Co zostało zrobione w zakresie przewoźników
 - Dodano dwóch przewoźników: `DobreWina Kurier A` i `DobreWina Kurier B` (skrypt: `html/create_carriers_and_configure.php`).
 - Dla obu przewoźników dodano przedziały cenowe tak, aby przy zamówieniach powyżej 2000 zł dostawa była darmowa.
@@ -64,4 +66,3 @@ php /var/www/html/add_weight_ranges.php
   - wygenerować testowe produkty (>1000) dla obciążenia testowego.
 
 ---
-Plik README utworzony automatycznie przez asystenta. Jeśli chcesz, mogę dodać bardziej szczegółowy dokument (zrzuty ekranu, logi).
