@@ -1,4 +1,4 @@
-# Electronic Business Group Project
+# Electronic Business Group Project Biznes Eletroniczny
 
 PrestaShop 1.7.8 implementation using Docker
 
