@@ -93,12 +93,14 @@ PrestaShop 1.7.8 implementation using Docker
 ## Login information
 
 PrestaShop login information:\
-email: ```prestashop@prestashop.com```
-password: ```prestashop```
+email: `prestashop@prestashop.com`
+password: `prestashop`
 
 Database login information:\
-login: ```prestashop```
-password: ```prestashop```
+login: `prestashop`
+password: `prestashop`
+
+webservice api-key: `R7FM7TCGA6NJRJU49MFTSJDP2JQ481U1`
 
 Configuration information in `docker-compose.yml`
 
