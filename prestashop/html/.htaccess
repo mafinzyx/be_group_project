@@ -8,6 +8,9 @@ SetEnv HTTP_MOD_REWRITE On
 </IfModule>
 
 RewriteEngine on
+RewriteCond %{HTTP:Authorization} ^(.*)
+RewriteRule . - [E=HTTP_AUTHORIZATION:%1]
+
 
 
 #Domain: 127.0.0.1
