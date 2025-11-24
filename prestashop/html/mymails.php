@@ -105,11 +105,16 @@ function safe($s) { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
     .subject{font-weight:700;margin-bottom:6px}
     .body{margin-top:10px;border-top:1px dashed #eee;padding-top:8px}
     .empty{color:#777}
-  </style>
+    .back-btn{display:inline-flex;align-items:center;text-decoration:none;padding:5px 10px; background-color: #007bff; color:#fff; border-radius:5px; margin-bottom:20px;}
+    .back-btn i {margin-right:8px;}
+  </style>  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
+  <a href="http://localhost:80" class="back-btn">
+    <i class="fas fa-arrow-left"></i>
+  </a>
   <h1>Moje maile (<?php echo safe($email); ?>)</h1>
-
 <?php
 if (!$result) {
     echo '<p class="empty">Nie udało się połączyć z MailHog. Upewnij się, że MailHog działa i jest dostępny pod portem 8025.</p>';
