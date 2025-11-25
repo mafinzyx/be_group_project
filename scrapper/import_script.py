@@ -13,7 +13,7 @@ except ImportError:
     PrestaUpdater = None
 
 # --- KONFIGURACJA ---
-API_URL = "http://192.168.1.22/api"
+API_URL = "http://127.0.0.1/api"
 API_KEY = "A69H796EIHDNPMJBU71QGURX7JVDWSPH" 
 
 FILE_CATEGORIES = "./data/import_categories.csv"

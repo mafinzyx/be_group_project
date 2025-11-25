@@ -6,7 +6,7 @@ import time
 from io import BytesIO
 
 # --- KONFIGURACJA ---
-API_URL = "http://192.168.1.22/api"
+API_URL = "http://127.0.0.1/api"
 API_KEY = "A69H796EIHDNPMJBU71QGURX7JVDWSPH" 
 CSV_FILE = "./data/products.csv"
 
