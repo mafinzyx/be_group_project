@@ -1,0 +1,53 @@
+.custom-caption {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  color: #fff;
+  padding: 20px;
+  max-width: 400px;
+  z-index: 2;
+  border-radius: 0;
+  background: none;
+}
+
+.custom-caption h1{
+  color: #000000 !important;
+  margin: 0 0 10px;
+  text-transform: uppercase;
+
+}
+.custom-caption h2,
+.custom-caption h3 {
+  color: #fff !important;
+  margin: 0 0 10px;
+  text-transform: uppercase;
+}
+
+
+.custom-caption p {
+  font-size: 16px;
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+.check-button {
+  display: inline-block;
+  background-color: transparent;
+  color: #fff;
+  border: 2px solid #fff;
+  text-decoration: none;
+  padding: 10px 20px;
+  font-weight: bold;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.check-button:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+
+.check-button:hover {
+  background-color: #d40000;
+}

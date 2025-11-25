@@ -23,14 +23,14 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
 <div class="container">
-  <div class="row">
-    {block name='hook_footer_before'}
-      {hook h='displayFooterBefore'}
-    {/block}
-  </div>
 </div>
 <div class="footer-container">
   <div class="container">
+    <img src="http://localhost/img/logo-1764080974.jpg" alt="Dołącz do klubu" style="max-width: 100%; height: auto; margin-bottom: 1.5rem; border-radius: 8px;">
+
+        <div class="col-md-12">
+          <p><a href="/mymails.php" style="color: #8B0000 !important">Moje maile</a></p>
+        </div>
     <div class="row">
       {block name='hook_footer'}
         {hook h='displayFooter'}
@@ -41,24 +41,11 @@
         {hook h='displayFooterAfter'}
       {/block}
     </div>
-    <div class="row">
-      <div class="col-md-12">
-        <p class="text-sm-center">
-          {block name='copyright_link'}
-            <a href="https://www.prestashop.com" target="_blank" rel="noopener noreferrer nofollow">
-              {l s='%copyright% %year% - Ecommerce software by %prestashop%' sprintf=['%prestashop%' => 'PrestaShop™', '%year%' => 'Y'|date, '%copyright%' => '©'] d='Shop.Theme.Global'}
-            </a>
-          {/block}
-        </p>
-      </div>
-    </div>
-  </div>
 </div>
-
-<div class="container">
-  <div class="row">
-    <div class="col-md-12 text-sm-center">
-      <p><a href="/mymails.php">Moje maile</a></p>
-    </div>
-  </div>
+<div style="width: 100vw; background-color: #8B0000; color: #fff; padding: 2rem 1rem; text-align: center; font-size: 0.9rem;">
+    <p style="margin: 0;">
+    <a href="https://www.prestashop.com" target="_blank" rel="noopener noreferrer nofollow" style="color: #fff; text-decoration: none;">
+            © Copyright - 2025™ Realizacja: PG
+    </a>
+  </p>
 </div>

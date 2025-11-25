@@ -30,13 +30,18 @@
 
 {block name='header_nav'}
   <nav class="header-nav">
+  <div style="width:100vw; background-color:#e6edeb;">
     <div class="container">
       <div class="row">
         <div class="hidden-sm-down">
-          <div class="col-md-5 col-xs-12">
-            {hook h='displayNav1'}
+          <div class="col-md-8 col-xs-12" style="margin-top:15px; font-size: 0.8rem">
+            <a href="/o-firmie" style="text-decoration: none;">O FIRMIE</a>
+            <a href="/warsztaty-winiarskie" style="text-decoration: none;">WARSZTATY WINIARSKIE</a>
+            <a href="/kontakt" style="text-decoration: none;">KONTAKT Z NAMI</a>
+            <a href="/blog" style="text-decoration: none;">BLOG</a>
+            <a href="/nasze-sklepy" style="text-decoration: none;">NASZE SKLEPY</a>
           </div>
-          <div class="col-md-7 right-nav">
+          <div class="col-md-4 right-nav">
               {hook h='displayNav2'}
           </div>
         </div>
@@ -50,6 +55,7 @@
           <div class="clearfix"></div>
         </div>
       </div>
+    </div>
     </div>
   </nav>
 {/block}
@@ -69,8 +75,8 @@
             {/if}
           {/if}
         </div>
-        <div class="header-top-right col-md-10 col-sm-12 position-static">
-          {hook h='displayTop'}
+        <div col-md-4 col-sm-12" style="padding: 12px 100px; display: flex; align-items: center;">
+          {hook h='displaySearch'}
         </div>
       </div>
       <div id="mobile_top_menu_wrapper" class="row hidden-md-up" style="display:none;">
@@ -82,6 +88,9 @@
         </div>
       </div>
     </div>
+    <div class="header-top-right ">
+          {hook h='displayTop'}
+        </div>
   </div>
   {hook h='displayNavFullWidth'}
 {/block}

@@ -37,9 +37,12 @@
             <figure>
               <img src="{$slide.image_url}" alt="{$slide.legend|escape}" loading="lazy" width="1110" height="340">
               {if $slide.title || $slide.description}
-                <figcaption class="caption">
-                  <h2 class="display-1 text-uppercase">{$slide.title}</h2>
-                  <div class="caption-description">{$slide.description nofilter}</div>
+                <figcaption class="custom-caption">
+                  <div class="caption-content">
+                    <h2>{$slide.title}</h2>
+                    <p>{$slide.description nofilter}</p>
+                    {*<a href="{$slide.url}" class="check-button">Sprawdź</a>*}
+                  </div>
                 </figcaption>
               {/if}
             </figure>

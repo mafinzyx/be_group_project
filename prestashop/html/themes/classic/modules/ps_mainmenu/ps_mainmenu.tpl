@@ -33,7 +33,7 @@
     {/if}
 {/function}
 
-<div class="menu js-top-menu position-static hidden-sm-down" id="_desktop_top_menu">
-    {menu nodes=$menu.children}
-    <div class="clearfix"></div>
+<div class="menu js-top-menu position-static hidden-sm-down" id="_desktop_top_menu" style="text-align: center; width: 100vw; background-color: #750707ff; padding: 1rem 0; color: #fff">
+  {menu nodes=$menu.children}
+  <div class="clearfix"></div>
 </div>
