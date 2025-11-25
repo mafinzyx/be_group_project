@@ -7,7 +7,7 @@ from io import BytesIO
 
 # --- KONFIGURACJA ---
 API_URL = "http://127.0.0.1/api"
-API_KEY = "A69H796EIHDNPMJBU71QGURX7JVDWSPH" 
+API_KEY = "R7FM7TCGA6NJRJU49MFTSJDP2JQ481U1" 
 CSV_FILE = "./data/products.csv"
 
 class PrestaUpdater:
@@ -119,10 +119,8 @@ class PrestaUpdater:
         print("--- ROZPOCZYNAM AKTUALIZACJĘ ---")
         with open(CSV_FILE, newline='', encoding='utf-8') as csvfile: 
             reader = csv.DictReader(csvfile, delimiter=';') 
-            
-            counter = 0
+
             for row in reader:
-                counter+=1
                 name = row.get('Name')
                 if not name: continue
                 
@@ -134,8 +132,8 @@ class PrestaUpdater:
                     qty = random.randint(0, 10)
                     self.update_stock(p_id, qty)
                     
-                    if (counter < 10):
-                        self.upload_image(p_id, row.get('Image 1 URL (Hi-Res)'))
+                    
+                    self.upload_image(p_id, row.get('Image 1 URL (Hi-Res)'))
                     
                 else:
                     print("   -> Nie znaleziono produktu w sklepie (może inna nazwa?)")
