@@ -103,7 +103,17 @@ Skrypty Scrappera
     source .venv/bin/activate
     pip install -r requirements.txt
     ```
-
+8. **Testy**
+   ```bash
+    sudo apt update
+    sudo apt install -y firefox firefox-geckodriver
+    cd ~/be_group_project/tests/selenium
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install --upgrade pip
+    pip install selenium
+    python3 test_shop.py
+   ```
 ## Dane logowania
 
 **Panel Administratora Prestashop:**\
