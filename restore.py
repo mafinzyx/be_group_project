@@ -105,7 +105,7 @@ if __name__ == "__main__":
     print("=" * 50)
 
     if not os.path.exists(PRESTA_HTML_DIR):
-        print("[BŁĄD] Nie widzę folderu prestashop/html. Uruchom kontenery!")
+        print("[BŁĄD] brak folderu prestashop/html")
         exit(1)
 
     selected_backup_path = choose_backup()
