@@ -14,7 +14,7 @@ except ImportError:
 
 # --- KONFIGURACJA ---
 API_URL = "http://127.0.0.1/api"
-API_KEY = "A69H796EIHDNPMJBU71QGURX7JVDWSPH" 
+API_KEY = "R7FM7TCGA6NJRJU49MFTSJDP2JQ481U1" 
 
 FILE_CATEGORIES = "./data/import_categories.csv"
 FILE_PRODUCTS = "./data/products.csv"
@@ -229,6 +229,8 @@ class PrestaShopImporter:
                 self._add_child(prod, 'active', '1')
                 self._add_child(prod, 'state', '1')
                 self._add_child(prod, 'available_for_order', '1')
+                self._add_child(prod, 'show_price', '1')
+                
                 self._add_child(prod, 'minimal_quantity', '1')
                 self._add_child(prod, 'id_tax_rules_group', '1')
                 self._add_child(prod, 'type', 'standard') 
