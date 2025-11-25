@@ -54,3 +54,11 @@
     </div>
   </div>
 </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 text-sm-center">
+      <p><a href="/mymails.php">Moje maile</a></p>
+    </div>
+  </div>
+</div>
