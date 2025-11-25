@@ -4,8 +4,13 @@ Implementacja PrestaShop 1.7.8 przy użyciu Dockera, z własnym scrapperem, rest
 
 ## Wymagania
 
+Prestashop
 - Docker
 - Docker Compose
+
+Skrypty Scrappera
+- requests
+- beautifulsoup4
 
 ### Jak zainstalować Docker i Docker Compose
 
@@ -89,6 +94,14 @@ Implementacja PrestaShop 1.7.8 przy użyciu Dockera, z własnym scrapperem, rest
     ```bash
     docker-compose down -v
     docker-compose up -d
+    ```
+
+7. **Praca ze scrapperem**\
+    Aby skrypty działały poprawnie, należy zainstalować biblioteki w module venv:
+    ```bash
+    python3 -m venv .venv
+    source .venv/bin/activate
+    pip install -r requirements.txt
     ```
 
 ## Dane logowania
