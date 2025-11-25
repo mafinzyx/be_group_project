@@ -8,7 +8,7 @@
         /scrapper
         /scrapper/data
     [X] Stworzenie pliku .gitignore (wykluczenie cache itp)
-    [ ] Stworzenie README.md (opis projektu, wersja softu, instrukcja uruchomienia, skład zespołu).
+    [X] Stworzenie README.md (opis projektu, wersja softu, instrukcja uruchomienia, skład zespołu).
     [X] Organizacja pracy (Issues): Zadania opisane jako Issues i przypisane do osób.
     [X] Workflow Git: Praca na branchach roboczych -> Pull Request (PR/MR) -> Code Review -> Merge do main.
 
@@ -66,5 +66,5 @@
 
 8. Backup i Finalizacja (5 pkt)
     [ ] Weryfikacja błędów: Upewnienie się, że nie ma błędów 500, 404, 403 w konsoli/logach.
-    [ ] Eksport ustawień: Zrzut bazy danych (SQL) oraz plików konfiguracyjnych.
+    [X] Eksport ustawień: Zrzut bazy danych (SQL) oraz plików konfiguracyjnych.
     [ ] Commit finalny: Umieszczenie zrzutu bazy/konfiguracji w folderze /config w repozytorium (umożliwiające odtworzenie sklepu).
