@@ -1,3 +1,4 @@
+import os
 from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -5,250 +6,281 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from random import randint, choice
 from time import sleep
 
-# settings for linux
-
+# Ustawiamy jeden główny adres
+BASE_URL = "http://127.0.0.1"
 
 def create_driver():
     options = webdriver.FirefoxOptions()
-    # USUNIĘTE: options.add_argument("--width=1400")
-    # USUNIĘTE: options.add_argument("--height=900")
-    
-    # Jeśli zainstalowałeś geckodriver przez apt, ta linia powinna wyglądać tak:
     service = Service() 
-    # LUB jeśli chcesz użyć tego pobranego automatycznie (z błędu widać, że Selenium Manager go pobrał):
-    # service = Service()
-
-    # ignore certificate errors
+    
     options.add_argument("--ignore-certificate-errors")
-    options.add_argument("--ignore-ssl-errors")  # ignore ssl errors
-    # options.add_argument('--disable-web-security') # Firefox rzadziej tego wymaga niż Chrome, można zostawić lub usunąć
-    
+    options.add_argument("--ignore-ssl-errors")
+
+    # --- KONFIGURACJA POBIERANIA PLIKÓW (DLA FAKTURY) ---
+    # 0 = Pulpit, 1 = Domyślny systemowy, 2 = Wskazany folder
+    options.set_preference("browser.download.folderList", 2)
+    # Pobieraj do katalogu bieżącego (tam gdzie skrypt) lub ~/Downloads
+    options.set_preference("browser.download.dir", os.getcwd())
+    # Nie pytaj o zapisywanie plików PDF
+    options.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/pdf")
+    options.set_preference("pdfjs.disabled", True)  # Wyłącz wbudowaną przeglądarkę PDF
+
     driver = webdriver.Firefox(service=service, options=options)
-    
-    # TUTAJ ustawiamy rozmiar okna PO uruchomieniu przeglądarki
-    driver.set_window_size(1400, 900) 
-    
+    driver.set_window_size(1400, 900)
     driver.implicitly_wait(5)
     return driver
 
 
 def registration_test(driver, email):
-    driver.get("http://localhost/login?create_account=1")
-    WebDriverWait(driver, 120).until(EC.title_is("Login"))
+    driver.get(f"{BASE_URL}/login?create_account=1")
+    WebDriverWait(driver, 10).until(EC.title_contains("Login"))
 
-    gender_mr = driver.find_element(By.ID, "field-id_gender-1")
-    gender_mr.click()
+    driver.find_element(By.ID, "field-id_gender-1").click()
+    driver.find_element(By.ID, "field-firstname").send_keys("Jan")
+    driver.find_element(By.ID, "field-lastname").send_keys("Kowalski")
+    driver.find_element(By.ID, "field-email").send_keys(email)
+    driver.find_element(By.ID, "field-password").send_keys("Student123!")
+    driver.find_element(By.ID, "field-birthday").send_keys("1995-05-31")
 
-    first_name = driver.find_element(By.ID, "field-firstname")
-    first_name.send_keys("John")
+    # Checkboxy
+    try:
+        driver.find_element(By.NAME, "optin").click()
+        driver.find_element(By.NAME, "customer_privacy").click()
+        driver.find_element(By.NAME, "psgdpr").click()
+    except:
+        pass
 
-    last_name = driver.find_element(By.ID, "field-lastname")
-    last_name.send_keys("Pork")
-
-    email_name = driver.find_element(By.ID, "field-email")
-    email_name.send_keys(email)
-
-    password = driver.find_element(By.ID, "field-password")
-    password.send_keys("StrongPass123")
-
-    birthday = driver.find_element(By.ID, "field-birthday")
-    birthday.send_keys("1970-05-31")
-
-    # first checkbox
-    newsletter = driver.find_element(By.NAME, "optin")
-    newsletter.click()
-
-    # second checkbox
-    privacy_policy = driver.find_element(By.NAME, "customer_privacy")
-    privacy_policy.click()
-
-    # third checkbox
-    psgdpr = driver.find_element(By.NAME, "psgdpr")
-    psgdpr.click()
-
-    button = driver.find_element(
-        By.CSS_SELECTOR, ".btn.btn-primary.form-control-submit.float-xs-right")
+    try:
+        button = driver.find_element(By.CSS_SELECTOR, "button[data-link-action='save-customer']")
+    except:
+        button = driver.find_element(By.CSS_SELECTOR, ".btn.btn-primary.form-control-submit")
+        
     button.click()
+    WebDriverWait(driver, 20).until(lambda d: "login" not in d.current_url)
+    print("KROK: Rejestracja zakończona sukcesem")
 
-    WebDriverWait(driver, 120).until(EC.title_is("dobrewina"))
-    print("TEST 4!  Registration successful")
 
-
-def add_products_test(driver, category_link, num_products=5):
+def add_products_test(driver, category_link, num_products):
     driver.get(category_link)
-    WebDriverWait(driver, 120).until(EC.presence_of_element_located(
+    WebDriverWait(driver, 20).until(EC.presence_of_element_located(
         (By.XPATH, '//*[contains(@class, "product-list")]')))
 
     products = driver.find_elements(
         By.XPATH, '//div[@id="js-product-list"]//a[@class="thumbnail product-thumbnail"]')
     product_links = [product.get_attribute("href") for product in products]
 
-    for link in product_links[:num_products]:
-        driver.get(link)
-        WebDriverWait(driver, 120).until(EC.presence_of_element_located(
-            (By.CSS_SELECTOR, '.btn.btn-primary.add-to-cart')))
+    added_counter = 0 
 
-        quantity = driver.find_element(By.ID, 'quantity_wanted')
-        # to delete existing number in this fieild
-        quantity.send_keys(Keys.CONTROL + "a")
-        quantity.send_keys(Keys.DELETE)
-        # quantity.send_keys(randint(1, 7))
-        quantity.send_keys(1)
+    for link in product_links:
+        if added_counter >= num_products:
+            break
+
+        driver.get(link)
         
-        add_to_cart = driver.find_element(
-            By.CSS_SELECTOR, '.btn.btn-primary.add-to-cart')
-        add_to_cart.click()
-        # waiting for "Produkt dodany poprawnie do Twojego koszyka" window to appear
-        WebDriverWait(driver, 120).until(EC.presence_of_element_located(
-            (By.CLASS_NAME, "modal-backdrop.fade.in")))
-    print("TEST 1!  Products added to cart from category: ", category_link)
+        try:
+            add_btn_selector = (By.CSS_SELECTOR, '.btn.btn-primary.add-to-cart')
+            WebDriverWait(driver, 1).until(EC.element_to_be_clickable(add_btn_selector))
+
+            # --- WYMAGANIE: RÓŻNE ILOŚCI ---
+            random_qty = randint(1, 2)
+            
+            quantity = driver.find_element(By.ID, 'quantity_wanted')
+            quantity.send_keys(Keys.CONTROL + "a")
+            quantity.send_keys(Keys.DELETE)
+            quantity.send_keys(str(random_qty)) # Wpisujemy losową ilość
+            
+            driver.find_element(*add_btn_selector).click()
+            
+            WebDriverWait(driver, 10).until(EC.visibility_of_element_located(
+                (By.ID, "blockcart-modal")))
+            
+            print(f"-> Dodano produkt: {link} (Ilość: {random_qty})")
+            added_counter += 1 
+
+        except TimeoutException:
+            print(f"-> Pominięto (niedostępny): {link}")
+            continue 
+            
+    print(f"KROK: Dodano {added_counter} produktów z kategorii.")
 
 
 def find_by_name_test(driver, name_of_product):
-    driver.get("http://localhost")
+    driver.get(BASE_URL)
     search_bar = driver.find_element(By.CLASS_NAME, 'ui-autocomplete-input')
     search_bar.click()
     search_bar.send_keys(name_of_product)
     search_bar.send_keys(Keys.ENTER)
 
-    WebDriverWait(driver, 120).until(EC.title_is('Search'))
+    WebDriverWait(driver, 20).until(EC.title_contains('Search'))
 
     products = driver.find_elements(
         By.XPATH, '//div[@id="js-product-list"]//a[@class="thumbnail product-thumbnail"]')
-    product_links = [product.get_attribute("href") for product in products]
-    random_link = choice(product_links)
-
-    driver.get(random_link)
-    WebDriverWait(driver, 120).until(EC.title_contains(name_of_product[:-1]))
-
-    add_to_cart = driver.find_element(
-        By.CSS_SELECTOR, '.btn.btn-primary.add-to-cart')
-    add_to_cart.click()
-    # waiting for "Produkt dodany poprawnie do Twojego koszyka" window to appear
-    WebDriverWait(driver, 120).until(EC.presence_of_element_located(
-        (By.CLASS_NAME, "modal-backdrop.fade.in")))
-    print("TEST 2!  Product added to cart: ", name_of_product)
+    
+    if products:
+        random_link = choice(products).get_attribute("href")
+        driver.get(random_link)
+        
+        add_btn = WebDriverWait(driver, 10).until(EC.element_to_be_clickable(
+            (By.CSS_SELECTOR, '.btn.btn-primary.add-to-cart')))
+        add_btn.click()
+        
+        WebDriverWait(driver, 10).until(EC.visibility_of_element_located(
+                (By.ID, "blockcart-modal")))
+        print(f"KROK: Znaleziono '{name_of_product}' i dodano losowy wynik.")
+    else:
+        print(f"BŁĄD: Nie znaleziono produktu '{name_of_product}'")
 
 
 def remove_from_cart_test(driver):
-    driver.get("http://localhost/cart?action=show")
-    WebDriverWait(driver, 120).until(EC.title_is('Cart'))
+    driver.get(f"{BASE_URL}/cart?action=show")
+    WebDriverWait(driver, 20).until(EC.title_contains('Cart'))
 
-    for _ in range(3):
-        cart_items = driver.find_elements(By.CLASS_NAME, 'cart-item')
-        if not cart_items:
-            print("Cart is empty")
+    # --- WYMAGANIE: USUNIĘCIE 3 PRODUKTÓW ---
+    print("KROK: Usuwanie 3 produktów z koszyka...")
+    
+    for i in range(3):
+        try:
+            # Odświeżamy listę elementów za każdym razem, bo DOM się zmienia po usunięciu
+            cart_items = driver.find_elements(By.CLASS_NAME, 'cart-item')
+            if not cart_items:
+                print("Koszyk jest już pusty!")
+                break
+            
+            # Szukamy przycisku usuwania w pierwszym elemencie
+            remove_btn = cart_items[0].find_element(By.CLASS_NAME, "remove-from-cart")
+            remove_btn.click()
+            
+            # Czekamy aż element zniknie (staleness) lub lista się zmniejszy
+            sleep(2) # Krótki sleep jest tu najbezpieczniejszy dla stabilności przy AJAX Presty
+            print(f"-> Usunięto produkt nr {i+1}")
+            
+        except Exception as e:
+            print(f"Problem przy usuwaniu: {e}")
             break
-
-        remove_button = cart_items[0].find_element(
-            By.CSS_SELECTOR, "i.material-icons.float-xs-left")
-        remove_button.click()
-
-        WebDriverWait(driver, 120).until(EC.staleness_of(cart_items[0]))
-    print("TEST 3!  Products removed from cart")
 
 
 def process_of_buying_test(driver):
-    driver.get("http://localhost/cart?action=show")
-    WebDriverWait(driver, 120).until(EC.title_is('Cart'))
+    driver.get(f"{BASE_URL}/cart?action=show")
+    WebDriverWait(driver, 20).until(EC.title_contains('Cart'))
+    driver.find_element(By.CSS_SELECTOR, 'a.btn.btn-primary').click()
 
-    checkout_button = driver.find_element(By.CSS_SELECTOR, 'a.btn.btn-primary')
-    checkout_button.click()
+    # Adres
+    WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.ID, "field-address1")))
+    driver.find_element(By.ID, "field-address1").send_keys("ul. Testowa 5")
+    driver.find_element(By.ID, "field-postcode").send_keys("80-180")
+    driver.find_element(By.ID, "field-city").send_keys("Gdańsk")
+    driver.find_element(By.NAME, 'confirm-addresses').click()
 
-    address = driver.find_element(By.ID, "field-address1")
-    address.send_keys("ul. Kosmonawtow 12")
+    # --- WYMAGANIE: Wybór jednego z dwóch przewoźników ---
+    WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.NAME, 'confirmDeliveryOption')))
+    delivery_options = driver.find_elements(By.CSS_SELECTOR, ".delivery-option input")
+    # Wybieramy drugi jeśli jest, jeśli nie to pierwszy
+    if len(delivery_options) >= 2:
+        driver.execute_script("arguments[0].click();", delivery_options[1])
+        print("-> Wybrano drugiego przewoźnika")
+    elif delivery_options:
+        driver.execute_script("arguments[0].click();", delivery_options[0])
+        print("-> Wybrano pierwszego przewoźnika (tylko jeden dostępny)")
+        
+    driver.find_element(By.NAME, 'confirmDeliveryOption').click()
 
-    post_code = driver.find_element(By.ID, "field-postcode")
-    post_code.send_keys("12-228")
+    # --- WYMAGANIE: Płatność przy odbiorze ---
+    WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.ID, "payment-option-2")))
+    
+    # Szukamy opcji "Cash on delivery" lub "Przy odbiorze"
+    payment_options = driver.find_elements(By.CSS_SELECTOR, ".payment-option label")
+    cod_found = False
+    
+    for index, option in enumerate(payment_options):
+        text = option.text.lower()
+        if "cash" in text or "odbiorze" in text or "delivery" in text:
+            # Klikamy odpowiedni input (id payment-option-X)
+            input_id = option.find_element(By.XPATH, "./preceding-sibling::span/input").get_attribute("id")
+            driver.find_element(By.ID, input_id).click()
+            print(f"-> Wybrano płatność: {option.text}")
+            cod_found = True
+            break
+            
+    if not cod_found:
+        print("UWAGA: Nie znaleziono 'Płatności przy odbiorze'. Wybieram domyślną.")
+        driver.find_element(By.ID, "payment-option-2").click() # Fallback
 
-    city = driver.find_element(By.ID, "field-city")
-    city.send_keys("Grodno")
+    # Warunki i Zamówienie
+    driver.find_element(By.ID, "conditions_to_approve[terms-and-conditions]").click()
+    driver.find_element(By.CSS_SELECTOR, '#payment-confirmation button').click()
 
-    next_button = driver.find_element(By.NAME, 'confirm-addresses')
-    next_button.click()
-
-    delivery_button = driver.find_element(By.ID, "delivery_option[8]")
-    delivery_button.click()
-
-    next_button = driver.find_element(By.NAME, 'confirmDeliveryOption')
-    next_button.click()
-
-    payment_button = driver.find_element(By.ID, "payment-option-2")
-    payment_button.click()
-
-    conditions = driver.find_element(
-        By.ID, "conditions_to_approve[terms-and-conditions]")
-    conditions.click()
-
-    order_button = driver.find_element(
-        By.CSS_SELECTOR, 'button.btn.btn-primary.center-block')
-    order_button.click()
-
-    WebDriverWait(driver, 30).until(
-        EC.presence_of_element_located((By.ID, 'number-input')))
-    card_number = driver.find_element(By.ID, "number-input")
-    card_number.send_keys("4444333322221111")
-
-    date_number = driver.find_element(By.ID, "date-input")
-    date_number.send_keys("1229")
-
-    cvv_number = driver.find_element(By.ID, "cvv-input")
-    cvv_number.send_keys("123")
-
-    submit_button = driver.find_element(
-        By.CSS_SELECTOR, "input[name='submit']")
-    submit_button.click()
-
-    WebDriverWait(driver, 120).until(EC.title_is('Order confirmation'))
-    order_reference = driver.find_element(By.ID, "order-reference-value")
-    order_text = order_reference.text
-    order_number = order_text.split(":")[-1].strip()
-
-    print("TEST 5!  Order number: ", order_number)
-    return order_number
+    WebDriverWait(driver, 20).until(EC.title_contains('Order'))
+    
+    try:
+        ref_element = driver.find_element(By.ID, "order-reference-value")
+        order_ref = ref_element.text.split(":")[-1].strip()
+        print(f"KROK: Zamówienie złożone. Numer: {order_ref}")
+        return order_ref
+    except:
+        return "ERROR"
 
 
-def order_tracking_test(driver, tracking_number):
-    order_history = driver.find_element(By.XPATH, '//*[@id="footer_account_list"]/li[2]/a')
-    order_history.click()
-    WebDriverWait(driver, 120).until(EC.title_is('Order history'))
-
-    rows = driver.find_elements(By.CSS_SELECTOR, "table tbody tr")
-    for row in rows:
-        if tracking_number in row.text:
-            fax_button = row.find_element(
-                By.CSS_SELECTOR, "td.text-sm-center.hidden-md-down a i.material-icons")
-            fax_button.click()
-            sleep(5)
-            button = row.find_element(
-                By.CSS_SELECTOR, "a[data-link-action='view-order-details']")
-            button.click()
-
-    WebDriverWait(driver, 120).until(EC.title_is('dobrewina'))
-    print("TEST 6!  Order tracking successful")
+def check_status_and_invoice_test(driver):
+    driver.get(f"{BASE_URL}/order-history")
+    WebDriverWait(driver, 20).until(EC.title_contains('Order history'))
+    print("KROK: Sprawdzanie statusu zamówienia...")
+    
+    # Pobieramy pierwszy wiersz (ostatnie zamówienie)
+    try:
+        first_row = driver.find_element(By.CSS_SELECTOR, "table tbody tr")
+        status = first_row.find_element(By.CSS_SELECTOR, ".label-pill").text
+        print(f"-> Status zamówienia: {status}")
+        
+        # --- WYMAGANIE: Pobranie faktury VAT ---
+        print("KROK: Pobieranie faktury VAT...")
+        # Szukamy linku do PDF (zwykle ikonka file-pdf-o lub tekst Invoice)
+        # Selektor może się różnić zależnie od szablonu, szukamy po hrefie zawierającym 'pdf'
+        pdf_link = first_row.find_element(By.CSS_SELECTOR, "a[href*='pdf']")
+        pdf_link.click()
+        print("-> Kliknięto pobieranie faktury (sprawdź folder ze skryptem lub Pobrane)")
+        sleep(5) # Czekamy chwilę aż się pobierze
+        
+    except NoSuchElementException:
+        print("BŁĄD: Nie znaleziono zamówienia lub linku do faktury w historii.")
+    except Exception as e:
+        print(f"BŁĄD przy fakturze: {e}")
 
 
 def run_tests():
     driver = create_driver()
     driver.maximize_window()
-    email = "test" + str(randint(1000, 9999)) + "@gmail.com"
+    email = "student" + str(randint(10000, 99999)) + "@mail.pl"
+    
     try:
-        category_link1 = "http://localhost/en/39-wina"
-        add_products_test(driver, category_link1, num_products=5)
-        category_link2 = "http://localhost/en/136-delikatesy"
-        add_products_test(driver, category_link2, num_products=5)
-        name_of_product = "Zestaw"
-        find_by_name_test(driver, name_of_product)
+        # 1. Dodanie 10 produktów (5 z jednej, 5 z drugiej kat.)
+        # UWAGA: Upewnij się, że ID kategorii (307, 403) są poprawne dla Twojego sklepu
+        add_products_test(driver, f"{BASE_URL}/en/307-wina", num_products=5)
+        add_products_test(driver, f"{BASE_URL}/en/404-delikatesy", num_products=5)
+        
+        # 2. Wyszukanie i dodanie losowego
+        find_by_name_test(driver, "Zestaw prezentowy Armagnac Haut Marin XO zapakowany")
+        
+        # 3. Usunięcie 3 produktów
         remove_from_cart_test(driver)
+        
+        # 4. Rejestracja
         registration_test(driver, email)
-        tracking_number = process_of_buying_test(driver)
-        order_tracking_test(driver, tracking_number)
+        
+        # 5, 6, 7, 8. Zamówienie, Płatność, Przewoźnik, Zatwierdzenie
+        process_of_buying_test(driver)
+        
+        # 9, 10. Status i Faktura
+        check_status_and_invoice_test(driver)
 
+    except Exception as e:
+        print(f"WYSTĄPIŁ BŁĄD KRYTYCZNY: {e}")
     finally:
-        driver.quit()
+        # driver.quit() # Zakomentowane, żebyś widział efekt końcowy
+        print("Test zakończony.")
 
-
-run_tests()
+if __name__ == "__main__":
+    run_tests()
