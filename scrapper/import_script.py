@@ -14,7 +14,7 @@ except ImportError:
 
 # --- KONFIGURACJA ---
 API_URL = "http://127.0.0.1/api"
-API_KEY = "A69H796EIHDNPMJBU71QGURX7JVDWSPH" 
+API_KEY = "R7FM7TCGA6NJRJU49MFTSJDP2JQ481U1"
 
 FILE_CATEGORIES = "./data/import_categories.csv"
 FILE_PRODUCTS = "./data/products.csv"
@@ -29,14 +29,15 @@ FEATURE_MAPPING = {
     "Pairing (Polecane do)": "Danie"
 }
 
+
 class PrestaShopImporter:
     def __init__(self, api_url, api_key):
         self.api_url = api_url.rstrip('/')
         self.session = requests.Session()
         self.session.auth = (api_key, '')
-        self.category_map = {}  
-        self.feature_map = {}  
-        self.feature_value_map = {} 
+        self.category_map = {}
+        self.feature_map = {}
+        self.feature_value_map = {}
 
     def _slugify(self, text):
         text = text.lower()
@@ -51,7 +52,7 @@ class PrestaShopImporter:
     def _add_child(self, parent, tag, text=None):
         """Inteligentne dodawanie pól (rozróżnia pola zwykłe od językowych)."""
         elem = parent.find(tag)
-        
+
         is_multilang = False
         if elem is not None:
             if elem.find('language') is not None:
@@ -68,7 +69,7 @@ class PrestaShopImporter:
 
                 lang1 = ET.SubElement(elem, 'language', id='1')
                 lang1.text = str(text)
-                
+
                 lang2 = ET.SubElement(elem, 'language', id='2')
                 lang2.text = str(text)
             else:
@@ -120,7 +121,8 @@ class PrestaShopImporter:
             response = self.session.post(url, data=xml_str)
             if response.status_code in (200, 201):
                 root = ET.fromstring(response.content)
-                tag_map = {'categories': 'category', 'products': 'product', 'product_features': 'product_feature', 'product_feature_values': 'product_feature_value'}
+                tag_map = {'categories': 'category', 'products': 'product', 'product_features': 'product_feature',
+                           'product_feature_values': 'product_feature_value'}
                 search_tag = tag_map.get(resource, resource)
                 node = root.find(search_tag)
                 if node is not None: return node.find('id').text
@@ -158,7 +160,8 @@ class PrestaShopImporter:
     def import_categories(self):
         print("\n--- IMPORT KATEGORII ---")
         if not os.path.exists(FILE_CATEGORIES):
-            print(f"Brak pliku kategorii: {FILE_CATEGORIES}"); return
+            print(f"Brak pliku kategorii: {FILE_CATEGORIES}");
+            return
 
         with open(FILE_CATEGORIES, newline='', encoding='utf-8-sig') as csvfile:
             reader = csv.DictReader(csvfile, delimiter=';', quotechar='"')
@@ -167,7 +170,7 @@ class PrestaShopImporter:
                 if not row: continue
                 name = row.get('Name')
                 if not name or name in self.category_map: continue
-                
+
                 parent_name = row.get('Parent category')
                 id_parent = self.category_map.get(parent_name, "2")
                 schema = self._get_blank_schema('categories')
@@ -177,7 +180,7 @@ class PrestaShopImporter:
                 self._add_child(node, 'name', name)
                 self._add_child(node, 'link_rewrite', self._slugify(name))
                 self._add_child(node, 'description', row.get('Description', ''))
-                
+
                 new_id = self.post_resource('categories', schema)
                 if new_id:
                     self.category_map[name] = new_id
@@ -186,7 +189,8 @@ class PrestaShopImporter:
     def import_products(self):
         print("\n--- IMPORT PRODUKTÓW (BAZA) ---")
         if not os.path.exists(FILE_PRODUCTS):
-            print(f"Brak pliku produktów: {FILE_PRODUCTS}"); return
+            print(f"Brak pliku produktów: {FILE_PRODUCTS}");
+            return
 
         with open(FILE_PRODUCTS, newline='', encoding='utf-8-sig') as csvfile:
             reader = csv.DictReader(csvfile, delimiter=';', quotechar='"')
@@ -198,14 +202,14 @@ class PrestaShopImporter:
                 # 1. Parsowanie wszystkich kategorii z ciągu
                 cat_string = row.get('Category', '')
                 all_cats_raw = cat_string.split('|')
-                
+
                 # Zbieramy ID wszystkich pasujących kategorii do zbioru (set), żeby uniknąć duplikatów
                 categories_to_assign = set()
-                
+
                 # Ustalanie głównej kategorii (ostatnia z listy)
                 def_cat_name = all_cats_raw[-1].strip() if all_cats_raw else "Strona główna"
                 id_cat_default = self.category_map.get(def_cat_name, "2")
-                
+
                 # Zawsze dodajemy kategorię domyślną do listy przypisań
                 categories_to_assign.add(id_cat_default)
 
@@ -214,7 +218,7 @@ class PrestaShopImporter:
                     c_clean = c_raw.strip()
                     if c_clean in self.category_map:
                         categories_to_assign.add(self.category_map[c_clean])
-                
+
                 # 2. Budowanie XML produktu
                 schema = self._get_blank_schema('products')
                 prod = schema.find('product')
@@ -222,28 +226,30 @@ class PrestaShopImporter:
                 self._add_child(prod, 'name', name)
                 self._add_child(prod, 'price', self._clean_price(row.get('Price')))
                 self._add_child(prod, 'description', row.get('Description', ''))
-                self._add_child(prod, 'id_category_default', id_cat_default) # Kategoria główna
+                self._add_child(prod, 'id_category_default', id_cat_default)  # Kategoria główna
                 self._add_child(prod, 'reference', row.get('Product ID', ''))
                 self._add_child(prod, 'link_rewrite', self._slugify(name))
-                
+
                 self._add_child(prod, 'active', '1')
                 self._add_child(prod, 'state', '1')
                 self._add_child(prod, 'available_for_order', '1')
+                self._add_child(prod, 'show_price', '1')
+
                 self._add_child(prod, 'minimal_quantity', '1')
                 self._add_child(prod, 'id_tax_rules_group', '1')
-                self._add_child(prod, 'type', 'standard') 
+                self._add_child(prod, 'type', 'standard')
                 self._add_child(prod, 'id_shop_default', '1')
 
                 # 3. Przypisywanie WSZYSTKICH kategorii (Associations)
                 associations = prod.find('associations')
                 if associations is None: associations = ET.SubElement(prod, 'associations')
-                
+
                 # Usuń pusty tag <categories> jeśli istnieje
                 for child in list(associations):
                     if child.tag == 'categories': associations.remove(child)
-                
+
                 cats_node = ET.SubElement(associations, 'categories')
-                
+
                 # Pętla po wszystkich znalezionych ID kategorii
                 for cat_id in categories_to_assign:
                     c_item = ET.SubElement(cats_node, 'category')
@@ -266,18 +272,18 @@ class PrestaShopImporter:
                 new_id = self.post_resource('products', schema)
                 print(f"Utworzono produkt: {name[:40]}... (Kategorie: {len(categories_to_assign)})")
 
+
 if __name__ == "__main__":
     importer = PrestaShopImporter(API_URL, API_KEY)
     importer.import_categories()
     importer.import_products()
 
-    
     if PrestaUpdater:
-        print("\n" + "="*50)
+        print("\n" + "=" * 50)
         print("IMPORT ZAKOŃCZONY. URUCHAMIAM AKTUALIZACJĘ (ZDJĘCIA/ILOŚCI)...")
-        print("="*50 + "\n")
+        print("=" * 50 + "\n")
         updater = PrestaUpdater(API_URL, API_KEY)
-        updater.CSV_FILE = FILE_PRODUCTS 
+        updater.CSV_FILE = FILE_PRODUCTS
         updater.run()
     else:
         print("\n[BŁĄD] Nie można uruchomić drugiego skryptu (brak pliku update_stock_and_images.py).")
