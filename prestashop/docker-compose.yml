@@ -14,6 +14,11 @@ services:
     volumes:
       - db_data:/var/lib/mysql
       - ./dumps:/docker-entrypoint-initdb.d
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
 
   prestashop:
     image: prestashop/prestashop:1.7.8
@@ -37,6 +42,11 @@ services:
       - PS_INSTALL_AUTO=0
       - PS_DEV_MODE=0
       - PS_DOMAIN=localhost
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
 
   mailhog:
     image: mailhog/mailhog:latest
@@ -45,6 +55,11 @@ services:
       - "8025:8025" # MailHog web UI
       - "1025:1025" # SMTP port
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
 
 volumes:
   db_data:
