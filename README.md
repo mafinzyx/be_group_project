@@ -120,9 +120,10 @@ password: `prestashop`
 Szczegóły konfiguracji znajdują się w pliku `docker-compose.yml`
 
 
-PART 2:
-[+] Added GoogleAnalytics: 
-    Gmail Account (analytics.google.com): 
+## PART 2:
+[x] Added GoogleAnalytics:
+    Gmail Account ([https://analytics.google.com/](https://analytics.google.com/)): 
+    
         Email: dobrewina5@gmail.com
         Password: dobreWina5_PG
 
