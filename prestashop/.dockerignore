@@ -1,0 +1,10 @@
+.git
+.gitignore
+.github
+.dockerignore
+Dockerfile
+docker-compose.yml
+var/cache
+var/logs
+var/tmp
+vendor
