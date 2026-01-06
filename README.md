@@ -129,4 +129,14 @@ Szczegóły konfiguracji znajdują się w pliku `docker-compose.yml`
 
 ## Authors
 
-[![GitHub - Danylo Zherzdiev](https://img.shields.io/badge/GitHub-Danylo_Zherzdiev-181717?style=for-the-badge&logo=github)](https://github.com/mafinzyx)   [![GitHub - Danylo Lohachov](https://img.shields.io/badge/GitHub-Danylo_Lohachov-181717?style=for-the-badge&logo=github)](https://github.com/eternaki) [![GitHub - Maciej Blawat](https://img.shields.io/badge/GitHub-Maciej_Blawat-181717?style=for-the-badge&logo=github)](https://github.com/maciejblawat) [![GitHub - Maciej Blawat](https://img.shields.io/badge/GitHub-Mateusz_Grzonka-181717?style=for-the-badge&logo=github)]([https://github.com/maciejblawat](https://github.com/mateushhh)) [![GitHub - Maria Volkova](https://img.shields.io/badge/GitHub-Maria_Volkova-181717?style=for-the-badge&logo=github)](https://github.com/mvollkova)
+[![GitHub - Danylo Zherzdiev](https://img.shields.io/badge/GitHub-Danylo_Zherzdiev-181717?style=for-the-badge&logo=github)](https://github.com/mafinzyx)
+[![GitHub - Danylo Lohachov](https://img.shields.io/badge/GitHub-Danylo_Lohachov-181717?style=for-the-badge&logo=github)](https://github.com/eternaki)
+[![GitHub - Maciej Blawat](https://img.shields.io/badge/GitHub-Maciej_Blawat-181717?style=for-the-badge&logo=github)](https://github.com/maciejblawat)
+[![GitHub - Mateusz Grzonka](https://img.shields.io/badge/GitHub-Mateusz_Grzonka-181717?style=for-the-badge&logo=github)](https://github.com/mateushhh)
+[![GitHub - Maria Volkova](https://img.shields.io/badge/GitHub-Maria_Volkova-181717?style=for-the-badge&logo=github)](https://github.com/mvollkova)
+
+198023 - Mateusz Grzonka
+197844 - Maciej Bławat
+196765 - Danylo Zherzdiev
+196610 - Danylo Lohachov
+196660 - Maria Volkova
