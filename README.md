@@ -1,123 +1,74 @@
-# Projekt Zespołowy Biznes Elektroniczny
+# Projekt Zespołowy Biznes Elektroniczny PART2
 
-Implementacja PrestaShop 1.7.8 przy użyciu Dockera, z własnym scrapperem, restapi importującym zescrapowane produkty, testami selenium.
+# WAŻNE
+### Klaster
+**NazwaKlastra:** `BE_196610` \
+**Port:** `196610`
+### Baza danych
+Nie stawiamy własnego kontenera MySQL w `docker-compose` tylko musimy użyć wspólnego na serwera MySQL \
+**NazwaBazy:** `BE_196610` \
+**Port:** `3306` \
+Można wejść na przeglądarkowy podgląd bazy danych na **Port:** `9099`
 
-## Wymagania
+# VPN
+**- Instrukcja konfiguracji OpenVPN z VPN ETI** -> http://starter.eti.pg.gda.pl/openvpn/ \
+**DO POBRANIA:** \
+**- Instalator OpenVPN** -> https://openvpn.net/community/ \
+**- Konfiguracja vpn2023.zip** -> http://starter.eti.pg.gda.pl/openvpn/download/vpn2023.zip
 
-Prestashop
-- Docker
-- Docker Compose
+## Przygotowanie połączenia VPN
+1. Wypakować pliki z `vpn2023.zip`
+2. Przejść do folderu gdzie zainstalowaliśmy openvpn (u mnie `D:\openvpn`) potem do folderu config
+3. Do folderu config wrzucić rozpakowane wcześniej pliki (nie plik .zip tylko jego zawartość)
+4. Po uruchomieniu programu OpenVPN, na pasku zadań w prawym dolnym rogu powinna się wyświetlać ikonka programu.
+5. Klikamy na niego prawym przyciskiem myszy i klikamy Połącz, podajemy dane do logowania się takie jak na mojapg i jesteśmy połączeni.
 
-Skrypty Scrappera
-- requests
-- beautifulsoup4
+**WAŻNE!**
+Należy podać cały login w postaci: `s123456@student.pg.edu.pl`
 
-### Jak zainstalować Docker i Docker Compose
+# SSH
+**DO POBRANIA** \
+**Instalator PuTTY (klient SSH)** -> https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html \
+*można korzystać z terminala na windowsie po prostu, ale PuTTY pozwala na tunelowanie które będzie potem potrzebne. \
+**na Linux/macOS powinno wystarczyć terminalowe SSH
 
-1.  **Zaktualizuj listę pakietów:**
-    ```bash
-    sudo apt update
-    ```
+## Łączenie z Bastionem (`172.20.83.101`)
+1. Połącz się z VPN wydziałowym (OpenVPN)
+2. Zaloguj się na Bastion (SSH) \
+W PuTTY: \
+**Host Name (or IP adress)**: `rsww@172.20.83.101` \
+W terminalu który się wyświetli \
+**Password**: `qwe123`
+3. Z bastiona logujemy się na węzeł klastra:
+`ssh hdoop@student-swarm01.maas` \
+jeśli będzie pytanie o hasło to wpisujesz `qwe123`
 
-2.  **Zainstaluj Docker i Docker Compose:**
-    ```bash
-    sudo apt install -y docker.io docker-compose
-    ```
+**WAŻNE** Jeśli chcecie kopiować linijki do okienka terminala, skopiujcie tekst a potem prawym przyciskiem myszy na okienko, wszystko powinno się wkleić
 
-3.  **Napraw uprawnienia (pozwala na uruchamianie Dockera bez 'sudo'):**
-    ```bash
-    sudo usermod -aG docker $USER
-    ```
+# Baza Danych MySQL
 
-4.  **WAŻNE:** Zrestartuj komputer, aby zastosować zmiany.
+## Łączenie z Bazą Danych
+1. Połącz się z VPN wydziałowym (OpenVPN)
+2. W PuTTY Host: `172.20.83.101` (nie łączymy się jeszcze)
+3. Wchodzimy w zakładke Connection -> SSH -> Tunnels i uzupełniamy dane \
+Source Port: `9099` \
+Destination: `student-swarm01.maas:9099` 
+4. Klikamy Add i Open.
+5. Zaloguj się \
+login: `rsww` \
+hasło: `qwe123`
+6. Otwórz bazę przez przeglądarkę, wejdź na `http://localhost:9099` \
+Username: `root` \
+Password: `student`
 
-## Instalacja
+##. Importowanie `init.sql`
+1. Łączymy się z bazą danych według poprzedniej instrukcji
+2. Klikamy zakładke "Import", wrzucamy plik init.sql` \
+**ROZWIĄZANIE BŁĘDU** "*Error in query (1273): Unknown collation: 'utf8mb4_0900_ai_ci'*"
+3. Otwórz init.sql w edytorze tekstu, wciśnij CTRL+H zamień wszystkie `utf8mb4_0900_ai_ci` na `utf8mb4_general_ci`
+4. Spróbuj ponownie zaimportować `init.sql`
 
-1. **Sklonuj repozytorium**
-    ```bash
-    git clone https://github.com/mafinzyx/be_group_project.git
-    cd ./be_group_project/prestashop
-    ```
 
-2. **Wygeneruj certyfikaty SSL**
-    ```bash
-    mkdir -p certs
-    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout certs/prestashop.key -out certs/prestashop.crt
-    ```
-    **WAŻNE:** Kiedy zapytany o "Common Name (CN): " wpisz: `localhost`. Pomiń pozostałe pola wciskając enter.
-
-3. **Uruchom środowisko**
-    ```bash
-    docker-compose up -d
-    ```
-    To zazwyczaj trwa chwile, pierwsze uruchomienie trwa dłużej
-
-    **Jeśli dostajesz błędy "Pythonowe"** spróbuj użyć:
-    ```bash
-    sudo apt install python3-setuptools
-    ```
-    a potem ponów użycie `docker-compose up -d`
-
-    Następnie przydziel poprawne uprawnienia dostępu do projektu
-
-    ```bash
-    sudo chmod -R 777 .
-    ```
-
-    Jeśli kiedykolwiek będziesz musiał zresetować Dockera lub bazę danych, użyj:
-    ```bash
-    docker-compose down -v
-    docker-compose up -d
-    ```
-
-4. **Dostęp do sklepu**\
-    Po uruchomieniu środowiska udaj się na:\
-    http://localhost:80 \
-    Panel administracyjny strony:\
-    http://localhost:80/admin191rnbbnl
-
-5. **Zapisywanie zmian w bazie danych (Dodane produkty itp.)**
-    Jeśli zmodyfikowałeś dane w bazie, musisz wykonać jej zrzut (dump), aby zapisać zmiany:
-    ```bash
-    sudo docker exec prestashop_db mysqldump -u root -pprestashop prestashop > dumps/init.sql
-    ```
-
-    Następnie wyślij zmiany na Gita:
-    ```bash
-    git add .
-    git commit -m "Added X products and updated DB"
-    git push
-    ```
-
-6. **Wczytywanie zmian w bazie od innych (Restartowanie Bazy Danych)**\
-    Jeśli inny członek zespołu zmodyfikował bazę danych (`init.sql`), musisz przeładować wolumen:
-    ```bash
-    docker-compose down -v
-    docker-compose up -d
-    ```
-
-7. **Praca ze scrapperem**\
-    Aby skrypty działały poprawnie, należy zainstalować biblioteki w module venv:
-    ```bash
-    python3 -m venv .venv
-    source .venv/bin/activate
-    pip install -r requirements.txt
-    ```
-
-## Dane logowania
-
-**Panel Administratora Prestashop:**\
-email: `prestashop@prestashop.com`
-password: `prestashop`
-
-**Baza Danych:**\
-login: `prestashop`
-password: `prestashop`
-
-**Klucz API Webservice:**\
-`R7FM7TCGA6NJRJU49MFTSJDP2JQ481U1`
-
-Szczegóły konfiguracji znajdują się w pliku `docker-compose.yml`
 
 
 ## PART 2:
