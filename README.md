@@ -36,10 +36,11 @@ Należy podać cały login w postaci: `s123456@student.pg.edu.pl`
 1. Połącz się z VPN wydziałowym (OpenVPN)
 2. Zaloguj się na Bastion (SSH) \
 W PuTTY: \
-**Host Name (or IP adress)**: `rsww@172.20.83.101` \
+**Host Name (or IP adress)**: `172.20.83.101` \
 W terminalu który się wyświetli \
+**Login**: `rsww`
 **Password**: `qwe123`
-3. Z bastiona logujemy się na węzeł klastra:
+4. Z bastiona logujemy się na węzeł klastra:
 `ssh hdoop@student-swarm01.maas` \
 jeśli będzie pytanie o hasło to wpisujesz `qwe123`
 
@@ -69,6 +70,7 @@ Password: `student`
 4. Spróbuj ponownie zaimportować `init.sql`
 
 ## Zarządzanie klastrem (na serwerze)
+- `ssh hdoop@student-swarm01.maas`
 - `/opt/storage/actina15-20/block-storage/students/projects/students-swarm-services/BE_196610` Ścieżka folderu na klastrze (tu znajduje się `docker-compose.yml`)
 - `docker service ls | grep BE_196610` - Listowanie usługi w klastrze żeby sprawdzić status REPLICAS 1/1 -> działa 0/1 błąd configu / brak zasobów
 - `docker stack deploy -c docker-compose.yml BE_196610 --with-registry-auth` wysyła docker-compose.yml do klastra
@@ -80,6 +82,16 @@ Password: `student`
 - `docker exec -it ID_KONTENERA /bin/bash` Otwiera terminal wewnątrz kontenera
 - `/var/www/html/app/config/parameters.php` ścieżka do `parameters.php` wewnątrz kontenera
 - `rm -rf var/cache/*` - Czyszczenie cache prestashopu, obowiązkowe po każdej zmianie w parameters.php
+
+## Konfiguracja PuTTY do wchodzenia na strone i na baze
+- Host Name `172.20.83.101`
+- Przejdź do SSH/Tunnels
+- Source Port: 8080
+- Destination student-swarm01.maas:19661
+- Add
+- Source Port: 9099
+- Destination student-swarm01.maas:9099
+- Teraz po zalogowaniu się można wejść na localhost:8080 i mamy dostęp do strony a localhost:9099 daje dostęp do bazy danych
 
 ## PART 2:
 [x] Added GoogleAnalytics:
