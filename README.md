@@ -93,6 +93,9 @@ Password: `student`
 - Destination student-swarm01.maas:9099
 - Teraz po zalogowaniu się można wejść na localhost:8080 i mamy dostęp do strony a localhost:9099 daje dostęp do bazy danych
 
+## Pliki konfiguracyjne
+Tutaj na branchu powinny być dwa pliki konfiguracyjne niezbędne do pracy `docker-compose.yml` oraz `parameters.php` długo mi zajęło skonfigurowanie ich w sposób żeby działały.
+
 ## PART 2:
 [x] Added GoogleAnalytics:
     Gmail Account ([https://analytics.google.com/](https://analytics.google.com/)): 
