@@ -61,15 +61,25 @@ hasło: `qwe123`
 Username: `root` \
 Password: `student`
 
-##. Importowanie `init.sql`
+## Importowanie `init.sql`
 1. Łączymy się z bazą danych według poprzedniej instrukcji
 2. Klikamy zakładke "Import", wrzucamy plik init.sql` \
 **ROZWIĄZANIE BŁĘDU** "*Error in query (1273): Unknown collation: 'utf8mb4_0900_ai_ci'*"
 3. Otwórz init.sql w edytorze tekstu, wciśnij CTRL+H zamień wszystkie `utf8mb4_0900_ai_ci` na `utf8mb4_general_ci`
 4. Spróbuj ponownie zaimportować `init.sql`
 
+## Zarządzanie klastrem (na serwerze)
+- `/opt/storage/actina15-20/block-storage/students/projects/students-swarm-services/BE_196610` Ścieżka folderu na klastrze (tu znajduje się `docker-compose.yml`)
+- `docker service ls | grep BE_196610` - Listowanie usługi w klastrze żeby sprawdzić status REPLICAS 1/1 -> działa 0/1 błąd configu / brak zasobów
+- `docker stack deploy -c docker-compose.yml BE_196610 --with-registry-auth` wysyła docker-compose.yml do klastra
+- `docker service ps BE_196610_prestashop --no-trunc` pokazuje historię zadań dla danej usługi
+- `docker service rm BE_196610_prestashop` - Całkowicie usuwa usługę z klastra. 
 
-
+## Praca z kontenerem
+- `docker ps | grep BE_196610` - Szuka ID konkretnego działającego kontenera na serwerze.
+- `docker exec -it ID_KONTENERA /bin/bash` Otwiera terminal wewnątrz kontenera
+- `/var/www/html/app/config/parameters.php` ścieżka do `parameters.php` wewnątrz kontenera
+- `rm -rf var/cache/*` - Czyszczenie cache prestashopu, obowiązkowe po każdej zmianie w parameters.php
 
 ## PART 2:
 [x] Added GoogleAnalytics:
