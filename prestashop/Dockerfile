@@ -1,13 +1,8 @@
-# Używamy oficjalnego obrazu jako bazy
-FROM prestashop/prestashop:1.7.8
+FROM dobrewina/prestashop:latest
 
-# Kopiujemy zawartość bieżącego katalogu (czyli folderu prestashop) do obrazu
-# Dzięki temu Twoje moduły i zmiany w kodzie trafią do obrazu
-COPY . /var/www/html
+COPY ./html/themes /var/www/html/themes
+COPY ./html/img /var/www/html/img
+COPY ./html/modules /var/www/html/modules
+COPY ./htmlmymails.php /var/www/html/mymails.php
 
-# Naprawiamy uprawnienia (kluczowe, żeby nie było błędu 500 na produkcji)
-RUN chown -R www-data:www-data /var/www/html
-RUN chmod -R 777 /var/www/html/var
-
-# Informujemy, że kontener nasłuchuje na porcie 80
-EXPOSE 80
+RUN chown -R www-data:www-data /var/www/html/themes /var/www/html/img /var/www/html/modules /var/www/html/admin191rnbbnl /var/www/html/mymails.php

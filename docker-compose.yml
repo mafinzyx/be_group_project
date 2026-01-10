@@ -18,15 +18,6 @@ services:
           memory: 512M
     volumes:
       - type: bind
-        source: /opt/storage/actina15-20/block-storage/students/projects/student                                                                                                                                                             s-swarm-services/BE_196610/img
-        target: /var/www/html/img
-      - type: bind
-        source: /opt/storage/actina15-20/block-storage/students/projects/student                                                                                                                                                             s-swarm-services/BE_196610/modules
-        target: /var/www/html/modules
-      - type: bind
-        source: /opt/storage/actina15-20/block-storage/students/projects/student                                                                                                                                                             s-swarm-services/BE_196610/themes
-        target: /var/www/html/themes
-      - type: bind
         source: /opt/storage/actina15-20/block-storage/students/projects/student                                                                                                                                                             s-swarm-services/BE_196610/upload
         target: /var/www/html/upload
       - type: bind
