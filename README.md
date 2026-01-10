@@ -93,6 +93,16 @@ Password: `student`
 - Destination student-swarm01.maas:9099
 - Teraz po zalogowaniu się można wejść na localhost:8080 i mamy dostęp do strony a localhost:9099 daje dostęp do bazy danych
 
+## Panel Administratora
+Folder admina zmienony z podstawowego na admin19661 -> bo wyskakiwal blad z security
+
+1. **Wejdź przez przeglądarkę:**
+   Przy włączonym tunelowaniu (Port 8080 -> 19661) wejdź na adres:
+   `http://localhost:8080/admin196610`
+2. **Dane logowania:**
+   **Email:** `prestashop@prestashop.com`
+   **Hasło:** `prestashop`
+
 ## Pliki konfiguracyjne
 Tutaj na branchu powinny być dwa pliki konfiguracyjne niezbędne do pracy `docker-compose.yml` oraz `parameters.php` długo mi zajęło skonfigurowanie ich w sposób żeby działały.
 
