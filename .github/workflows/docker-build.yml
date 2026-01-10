@@ -2,7 +2,7 @@ name: Build and Push Docker Image
 
 on:
   push:
-    branches: [ "master", "main", "google-analytics" ]
+    branches: [ "master", "main", "google-analytics", "part2-prep" ]
 
 jobs:
   build:
