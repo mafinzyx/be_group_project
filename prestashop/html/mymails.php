@@ -111,7 +111,7 @@ function safe($s) { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <a href="http://localhost:80" class="back-btn">
+  <a href="#" class="back-btn" onclick="history.back(); return false;">
     <i class="fas fa-arrow-left"></i>
   </a>
   <h1>Moje maile (<?php echo safe($email); ?>)</h1>
