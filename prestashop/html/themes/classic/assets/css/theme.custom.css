@@ -33,7 +33,7 @@ body, html {
 
 /* Links */
 a, a:link, a:visited {
-  color: var(--theme-primary) !important;
+  /*color: var(--theme-primary) !important;*/
 }
 a:hover, a:focus {
   color: var(--theme-primary-hover) !important;
