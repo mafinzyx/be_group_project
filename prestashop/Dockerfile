@@ -7,7 +7,7 @@ COPY ./html/modules /var/www/html/modules
 COPY ./html/mymails.php /var/www/html/mymails.php
 
 #parametry
-COPY ./html/app/config/parameters.php /var/www/html/app/config/parameters.php
+COPY parameters_prod.php /var/www/html/app/config/parameters.php
 
 #usuniecie instalacji
 RUN rm -rf /var/www/html/install
