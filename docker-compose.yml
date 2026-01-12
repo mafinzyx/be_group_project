@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   prestashop:
-    image: dobrewina/prestashop:latest
+    image: dobrewina/be_196610_prestashop:latest
     ports:
       - target: 80
         published: 19661

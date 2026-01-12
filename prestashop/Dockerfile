@@ -1,4 +1,4 @@
-FROM dobrewina/prestashop:latest
+FROM prestashop/prestashop:1.7.8
 
 COPY ./html/themes /var/www/html/themes
 COPY ./html/img /var/www/html/img
