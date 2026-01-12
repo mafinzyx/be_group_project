@@ -9,12 +9,10 @@ COPY ./html/mymails.php /var/www/html/mymails.php
 #parametry
 COPY parameters_prod.php /var/www/html/app/config/parameters.php
 
-#usuniecie instalacji
+RUN if [ -d "/var/www/html/admin" ]; then mv /var/www/html/admin /var/www/html/admin196610; fi
+
 RUN rm -rf /var/www/html/install
 
-RUN chown -R www-data:www-data \
-    /var/www/html/themes \
-    /var/www/html/img \
-    /var/www/html/modules \
-    /var/www/html/mymails.php \
-    /var/www/html/app/config/parameters.php
+RUN rm -rf /var/www/html/var/cache/*
+
+RUN chown -R www-data:www-data /var/www/html/
