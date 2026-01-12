@@ -25,4 +25,4 @@ jobs:
           context: ./prestashop
           file: ./prestashop/Dockerfile
           push: true
-          tags: dobrewina/prestashop:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/be_196610_prestashop:latest
