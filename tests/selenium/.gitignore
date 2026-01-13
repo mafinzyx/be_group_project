@@ -1,0 +1,15 @@
+# Python virtual environment
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Selenium
+*.log
+
+# Downloaded invoices
+*.pdf
+IN*.pdf
+
+# OS
+.DS_Store
