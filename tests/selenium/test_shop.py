@@ -106,8 +106,9 @@ def add_products_test(driver, category_link, num_products):
             print(f"-> Dodano: {link} (Ilość: {qty})")
             added_counter += 1 
 
-        except TimeoutException:
+        except (TimeoutException, NoSuchElementException) as e:
             # Produkt niedostępny -> idziemy do następnego
+            print(f"-> Pominięto produkt (niedostępny lub brak przycisku): {link}")
             continue 
             
     print(f"-> Pomyślnie dodano {added_counter} produktów.")
@@ -126,21 +127,35 @@ def find_by_name_test(driver, search_term):
 
     # Pobieramy wszystkie znalezione produkty
     products = driver.find_elements(By.CSS_SELECTOR, '.thumbnail.product-thumbnail')
-    
+
     if products:
         # --- WYMÓG: LOSOWY PRODUKT ---
-        random_product = choice(products)
-        link = random_product.get_attribute("href")
-        print(f"-> Wylosowano produkt: {link}")
-        
-        driver.get(link)
-        # Dodajemy do koszyka
-        add_btn = WebDriverWait(driver, 10).until(EC.element_to_be_clickable(
-            (By.CSS_SELECTOR, '.btn.btn-primary.add-to-cart')))
-        add_btn.click()
-        
-        WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, "blockcart-modal")))
-        print("-> Produkt z wyszukiwania dodany.")
+        # Próbujemy dodać do 5 losowych produktów (na wypadek jeśli niektóre niedostępne)
+        max_attempts = min(5, len(products))
+
+        for attempt in range(max_attempts):
+            try:
+                random_product = choice(products)
+                link = random_product.get_attribute("href")
+                print(f"-> Wylosowano produkt (próba {attempt+1}/{max_attempts}): {link}")
+
+                driver.get(link)
+
+                # Dodajemy do koszyka (timeout 2s - jeśli niedostępny, próbujemy następny)
+                add_btn = WebDriverWait(driver, 2).until(EC.element_to_be_clickable(
+                    (By.CSS_SELECTOR, '.btn.btn-primary.add-to-cart')))
+                add_btn.click()
+
+                WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, "blockcart-modal")))
+                print("-> Produkt z wyszukiwania dodany.")
+                return  # Sukces - wychodzimy
+
+            except (TimeoutException, NoSuchElementException):
+                print(f"-> Produkt niedostępny, próbuję następny...")
+                continue
+
+        # Jeśli wszystkie próby nie powiodły się
+        print(f"BŁĄD: Nie udało się dodać żadnego produktu po {max_attempts} próbach")
     else:
         print(f"BŁĄD: Nie znaleziono żadnych produktów dla frazy '{search_term}'")
 
