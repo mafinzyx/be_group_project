@@ -15,8 +15,8 @@ BASE_URL = "http://localhost:8080"
 
 def create_driver():
     options = webdriver.FirefoxOptions()
-    service = Service() 
-    
+    service = Service()
+
     options.add_argument("--ignore-certificate-errors")
     options.add_argument("--ignore-ssl-errors")
 
@@ -35,7 +35,6 @@ def create_driver():
 def registration_test(driver, email):
     print("KROK: Rejestracja nowego klienta...")
     driver.get(f"{BASE_URL}/index.php?controller=authentication&create_account=1")
-    # Ждем загрузки формы регистрации
     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "field-firstname")))
 
     driver.find_element(By.ID, "field-id_gender-1").click()
@@ -58,9 +57,9 @@ def registration_test(driver, email):
         button = driver.find_element(By.CSS_SELECTOR, "button[data-link-action='save-customer']")
     except:
         button = driver.find_element(By.CSS_SELECTOR, ".btn.btn-primary.form-control-submit")
-    
+
     button.click()
-    
+
     # Czekamy na przekierowanie po rejestracji
     WebDriverWait(driver, 20).until(lambda d: "create_account=1" not in d.current_url)
     print("-> Rejestracja zakończona sukcesem")
@@ -69,7 +68,7 @@ def registration_test(driver, email):
 def add_products_test(driver, category_link, num_products):
     print(f"KROK: Dodawanie {num_products} produktów z: {category_link}")
     driver.get(category_link)
-    
+
     # Czekamy na listę produktów
     WebDriverWait(driver, 20).until(EC.presence_of_element_located(
         (By.CSS_SELECTOR, '#js-product-list')))
@@ -77,15 +76,15 @@ def add_products_test(driver, category_link, num_products):
     products = driver.find_elements(By.CSS_SELECTOR, '.thumbnail.product-thumbnail')
     product_links = [p.get_attribute("href") for p in products]
 
-    added_counter = 0 
-    
+    added_counter = 0
+
     # Iterujemy po linkach (żeby ominąć niedostępne)
     for link in product_links:
         if added_counter >= num_products:
             break
 
         driver.get(link)
-        
+
         try:
             # Szukamy przycisku dodawania (krótki timeout 2s - jak nie ma, to produkt niedostępny)
             add_btn_selector = (By.CSS_SELECTOR, '.btn.btn-primary.add-to-cart')
@@ -93,42 +92,32 @@ def add_products_test(driver, category_link, num_products):
 
             # --- WYMÓG: RÓŻNE ILOŚCI ---
             qty = randint(1, 2)
-            
+
             qty_input = driver.find_element(By.ID, 'quantity_wanted')
             qty_input.send_keys(Keys.CONTROL + "a")
             qty_input.send_keys(Keys.DELETE)
             qty_input.send_keys(str(qty))
-            
+
             driver.find_element(*add_btn_selector).click()
 
             # Czekamy na modal potwierdzający
             WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, "blockcart-modal")))
 
-            # Zamykamy modal (WAŻNE - żeby nie blokował następnych działań)
-            try:
-                close_btn = driver.find_element(By.CSS_SELECTOR, "#blockcart-modal .close, #blockcart-modal button[data-dismiss='modal']")
-                driver.execute_script("arguments[0].click();", close_btn)
-                sleep(1)
-            except:
-                # Jeśli nie ma przycisku close, klikamy w tło lub ESC
-                driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.ESCAPE)
-                sleep(1)
-
             print(f"-> Dodano: {link} (Ilość: {qty})")
-            added_counter += 1 
+            added_counter += 1
 
         except (TimeoutException, NoSuchElementException) as e:
             # Produkt niedostępny -> idziemy do następnego
             print(f"-> Pominięto produkt (niedostępny lub brak przycisku): {link}")
-            continue 
-            
+            continue
+
     print(f"-> Pomyślnie dodano {added_counter} produktów.")
 
 
 def find_by_name_test(driver, search_term):
     print(f"KROK: Wyszukiwanie frazy '{search_term}' i wybór losowego produktu...")
     driver.get(BASE_URL)
-    
+
     search_bar = driver.find_element(By.CSS_SELECTOR, '#search_widget input[type="text"]')
     search_bar.clear()
     search_bar.send_keys(search_term)
@@ -138,16 +127,16 @@ def find_by_name_test(driver, search_term):
 
     # Pobieramy wszystkie znalezione produkty
     products = driver.find_elements(By.CSS_SELECTOR, '.thumbnail.product-thumbnail')
+    product_links = [p.get_attribute("href") for p in products]
 
-    if products:
+    if product_links:
         # --- WYMÓG: LOSOWY PRODUKT ---
         # Próbujemy dodać do 5 losowych produktów (na wypadek jeśli niektóre niedostępne)
-        max_attempts = min(5, len(products))
+        max_attempts = min(5, len(product_links))
 
         for attempt in range(max_attempts):
             try:
-                random_product = choice(products)
-                link = random_product.get_attribute("href")
+                link = choice(product_links)
                 print(f"-> Wylosowano produkt (próba {attempt+1}/{max_attempts}): {link}")
 
                 driver.get(link)
@@ -158,16 +147,6 @@ def find_by_name_test(driver, search_term):
                 add_btn.click()
 
                 WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, "blockcart-modal")))
-
-                # Zamykamy modal
-                try:
-                    close_btn = driver.find_element(By.CSS_SELECTOR, "#blockcart-modal .close, #blockcart-modal button[data-dismiss='modal']")
-                    driver.execute_script("arguments[0].click();", close_btn)
-                    sleep(1)
-                except:
-                    driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.ESCAPE)
-                    sleep(1)
-
                 print("-> Produkt z wyszukiwania dodany.")
                 return  # Sukces - wychodzimy
 
@@ -181,100 +160,86 @@ def find_by_name_test(driver, search_term):
         print(f"BŁĄD: Nie znaleziono żadnych produktów dla frazy '{search_term}'")
 
 
+def add_address_test(driver):
+    print("KROK: Dodawanie adresu do profilu...")
+    driver.get(f"{BASE_URL}/index.php?controller=address")
+
+    WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.ID, "field-address1")))
+    driver.find_element(By.ID, "field-address1").send_keys("ul. Sezamkowa 1")
+    driver.find_element(By.ID, "field-postcode").send_keys("80-180")
+    driver.find_element(By.ID, "field-city").send_keys("Gdańsk")
+
+    # Zapisujemy adres
+    driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
+
+    # Czekamy na przekierowanie
+    WebDriverWait(driver, 20).until(lambda d: "address" not in d.current_url or "addresses" in d.current_url)
+    print("-> Adres dodany do profilu")
+
+
 def remove_from_cart_test(driver):
     print("KROK: Usuwanie 3 produktów z koszyka...")
     driver.get(f"{BASE_URL}/index.php?controller=cart")
 
-    removed_count = 0
     for i in range(3):
         try:
-            sleep(2)  # Czekamy na załadowanie strony
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'cart-item')))
             cart_items = driver.find_elements(By.CLASS_NAME, 'cart-item')
 
             if not cart_items:
                 print("-> Koszyk jest pusty, przerywam usuwanie.")
                 break
 
-            print(f"-> Próba {i+1}: Produktów w koszyku: {len(cart_items)}")
+            # Usuwamy ZAWSZE pierwszy element z listy
+            delete_link = cart_items[0].find_element(By.CSS_SELECTOR, ".remove-from-cart")
+            delete_link.click()
 
-            # Szukamy przycisku usuwania - próbujemy różne selektory
-            delete_link = None
-            try:
-                delete_link = cart_items[0].find_element(By.CSS_SELECTOR, ".remove-from-cart")
-            except:
-                try:
-                    delete_link = cart_items[0].find_element(By.CSS_SELECTOR, "a.cart-remove")
-                except:
-                    try:
-                        delete_link = cart_items[0].find_element(By.CSS_SELECTOR, "[data-link-action='delete-from-cart']")
-                    except:
-                        print(f"-> Nie znaleziono przycisku usuwania dla produktu {i+1}")
-                        break
-
-            if delete_link:
-                driver.execute_script("arguments[0].click();", delete_link)
-                sleep(3)  # Czekamy na odświeżenie
-                removed_count += 1
-                print(f"-> Usunięto produkt nr {i+1}")
+            # Czekamy chwilę aż Presta odświeży koszyk (ważne!)
+            sleep(2)
+            print(f"-> Usunięto produkt nr {i+1}")
 
         except Exception as e:
-            print(f"-> Błąd przy usuwaniu produktu {i+1}: {str(e)[:100]}")
-            # Nie przerywamy - kontynuujemy z tym co mamy
+            print(f"-> Błąd przy usuwaniu: {e}")
             break
-
-    print(f"-> Usunięto {removed_count} produktów (z 3 planowanych)")
 
 
 def process_of_buying_test(driver):
     print("KROK: Realizacja zamówienia (Checkout)...")
+    # WAŻNE: Wracamy do koszyka po dodaniu adresu
     driver.get(f"{BASE_URL}/index.php?controller=cart")
-
-    # Sprawdzamy ile produktów w koszyku
-    sleep(2)  # Czekamy na załadowanie
-    cart_items = driver.find_elements(By.CLASS_NAME, 'cart-item')
-    print(f"-> Produktów w koszyku: {len(cart_items)}")
-
-    if len(cart_items) == 0:
-        print("BŁĄD: Koszyk pusty! Nie można przejść do checkout.")
-        return None
+    sleep(2)
 
     # --- FIX NA BŁĄD ElementClickIntercepted ---
-    # Przejdźmy bezpośrednio do checkout zamiast klikać przycisk
-    print("-> Przechodzę do checkout...")
-    driver.get(f"{BASE_URL}/index.php?controller=order")
+    # Czekamy na przycisk checkout
+    checkout_btn = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, 'a.btn.btn-primary')))
 
-    # Czekamy chwilę na załadowanie
+    # Używamy JavaScript do kliknięcia (omija zasłaniające elementy)
+    driver.execute_script("arguments[0].click();", checkout_btn)
     sleep(3)
 
-    # Sprawdzamy, czy jesteśmy na stronie checkout
-    print(f"-> URL po przejściu do checkout: {driver.current_url}")
-    print(f"-> Tytuł strony: {driver.title}")
-
-    # Zapisujemy HTML do pliku dla debugowania
-    with open("/tmp/checkout_page.html", "w", encoding="utf-8") as f:
-        f.write(driver.page_source)
-    print("-> HTML strony zapisany do /tmp/checkout_page.html")
+    # Debug: Sprawdzamy gdzie jesteśmy
+    print(f"  -> Po kliknięciu checkout: URL={driver.current_url}, Title={driver.title}")
 
     # 1. Adres
-    print("-> Podawanie adresu...")
+    print("-> Potwierdzanie adresu...")
+    # Czekamy na przycisk potwierdzenia adresu
     try:
-        WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.ID, "field-address1")))
-    except Exception as e:
-        print(f"BŁĄD: Nie znaleziono pola address1. URL: {driver.current_url}")
-        print(f"Tytuł strony: {driver.title}")
-        # Szukamy alternatywnych selektorów
-        address_fields = driver.find_elements(By.CSS_SELECTOR, "input[name*='address'], input[id*='address']")
-        print(f"Znalezione pola adresu: {len(address_fields)}")
+        confirm_btn = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, 'confirm-addresses')))
+        print("  -> Używam istniejącego adresu z profilu")
+        driver.execute_script("arguments[0].click();", confirm_btn)
+    except:
+        # Może być potrzeba wypełnienia nowego adresu
+        print(f"  -> Nie znaleziono przycisku potwierdzenia adresu")
+        print(f"  -> Obecny URL: {driver.current_url}")
+        print(f"  -> Tytuł: {driver.title}")
         raise
-    driver.find_element(By.ID, "field-address1").send_keys("ul. Sezamkowa 1")
-    driver.find_element(By.ID, "field-postcode").send_keys("80-180")
-    driver.find_element(By.ID, "field-city").send_keys("Gdańsk")
-    driver.find_element(By.NAME, 'confirm-addresses').click()
 
     # 2. Dostawa (Wybór jednego z dwóch przewoźników)
     print("-> Wybór przewoźnika...")
     WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.NAME, 'confirmDeliveryOption')))
-    
+
     delivery_inputs = driver.find_elements(By.CSS_SELECTOR, ".delivery-option input")
     if len(delivery_inputs) >= 2:
         # Wybieramy drugiego (index 1)
@@ -283,55 +248,35 @@ def process_of_buying_test(driver):
     elif delivery_inputs:
         driver.execute_script("arguments[0].click();", delivery_inputs[0])
         print("-> Wybrano pierwszego przewoźnika (tylko jeden dostępny).")
-        
+
     driver.find_element(By.NAME, 'confirmDeliveryOption').click()
 
     # 3. Płatność (Przy odbiorze)
     print("-> Wybór płatności...")
-    # Czekamy na sekcję płatności (bardziej elastyczny selektor)
-    WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".payment-option input, #payment-option-1, #payment-option-2")))
-    
-    # Szukamy opcji zawierającej "Cash", "Odbiorze" lub "Delivery"
-    payment_labels = driver.find_elements(By.CSS_SELECTOR, ".payment-option label")
-    found_cod = False
-    
-    for label in payment_labels:
-        text = label.text.lower()
-        if "cash" in text or "odbiorze" in text or "delivery" in text:
-            # Znajdujemy input powiązany z tą etykietą
-            input_id = label.get_attribute("for") # Atrybut 'for' wskazuje na ID inputa
-            if not input_id:
-                # Fallback: szukanie inputa obok
-                input_id = label.find_element(By.XPATH, "./preceding-sibling::span/input").get_attribute("id")
-            
-            driver.find_element(By.ID, input_id).click()
-            print(f"-> Wybrano: {label.text}")
-            found_cod = True
-            break
-            
-    if not found_cod:
-        print("UWAGA: Nie znaleziono płatności przy odbiorze. Wybieram pierwszą dostępną.")
-        # Próbujemy znaleźć dowolną opcję płatności
-        payment_inputs = driver.find_elements(By.CSS_SELECTOR, ".payment-option input")
-        if payment_inputs:
-            payment_inputs[0].click()
-        else:
-            # Ostatnia szansa - szukamy przez ID
+    sleep(2)
+
+    # Próbujemy znaleźć dowolną opcję płatności
+    payment_inputs = driver.find_elements(By.CSS_SELECTOR, ".payment-option input, input[name*='payment']")
+
+    if payment_inputs:
+        # Wybieramy pierwszą dostępną opcję
+        driver.execute_script("arguments[0].click();", payment_inputs[0])
+        print(f"-> Wybrano metodę płatności")
+    else:
+        # Próbujemy przez ID
+        try:
+            driver.find_element(By.ID, "payment-option-1").click()
+            print("-> Wybrano payment-option-1")
+        except:
             try:
-                driver.find_element(By.ID, "payment-option-1").click()
-            except:
                 driver.find_element(By.ID, "payment-option-2").click()
+                print("-> Wybrano payment-option-2")
+            except:
+                print("BŁĄD: Nie znaleziono żadnej opcji płatności")
 
     # 4. Zatwierdzenie
-    try:
-        terms_checkbox = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.ID, "conditions_to_approve[terms-and-conditions]")))
-        driver.execute_script("arguments[0].click();", terms_checkbox)
-    except Exception as e:
-        print(f"-> Nie znaleziono checkboxa warunków: {e}")
-
-    confirm_btn = driver.find_element(By.CSS_SELECTOR, '#payment-confirmation button')
-    driver.execute_script("arguments[0].click();", confirm_btn)
+    driver.find_element(By.ID, "conditions_to_approve[terms-and-conditions]").click()
+    driver.find_element(By.CSS_SELECTOR, '#payment-confirmation button').click()
 
     # Pobranie numeru zamówienia
     WebDriverWait(driver, 20).until(EC.title_contains('Order confirmation'))
@@ -348,13 +293,13 @@ def check_status_and_invoice_test(driver):
     print("KROK: Sprawdzanie statusu i faktury...")
     driver.get(f"{BASE_URL}/index.php?controller=history")
     WebDriverWait(driver, 20).until(EC.title_contains('Order history'))
-    
+
     try:
-        # Pobieramy pierwszy wiersz tabeli (najnowsze zamówienie)
+        # Pobieramy pierwszy wiersz (najnowsze zamówienie)
         row = driver.find_element(By.CSS_SELECTOR, "table tbody tr")
         status = row.find_element(By.CSS_SELECTOR, ".label-pill").text
         print(f"-> Status zamówienia: {status}")
-        
+
         # Pobieranie faktury
         # Szukamy linku, który w href ma 'pdf' lub ikony PDF
         pdf_links = row.find_elements(By.CSS_SELECTOR, "a[href*='pdf']")
@@ -364,7 +309,7 @@ def check_status_and_invoice_test(driver):
             sleep(5) # Czekamy na pobranie
         else:
             print("-> Brak faktury do pobrania (może status zamówienia na to nie pozwala?).")
-            
+
     except Exception as e:
         print(f"BŁĄD przy sprawdzaniu statusu: {e}")
 
@@ -373,24 +318,27 @@ def run_tests():
     driver = create_driver()
     driver.maximize_window()
     email = "student" + str(randint(10000, 99999)) + "@mail.pl"
-    
-    try:
-        # 1. Rejestracja (NAJPIERW - żeby nie stracić koszyka)
-        registration_test(driver, email)
 
-        # 2. Dodawanie produktów (2 kategorie po 5 sztuk)
+    try:
+        # 1. Dodawanie produktów (2 kategorie po 5 sztuk)
         # Zaktualizowane ID kategorii dla klastra:
         add_products_test(driver, f"{BASE_URL}/index.php?id_category=307&controller=category&id_lang=2", num_products=5)
         add_products_test(driver, f"{BASE_URL}/index.php?id_category=404&controller=category&id_lang=2", num_products=5)
 
-        # 3. Wyszukiwanie (używamy ogólnej frazy, żeby losowanie miało sens)
+        # 2. Wyszukiwanie (używamy ogólnej frazy, żeby losowanie miało sens)
         find_by_name_test(driver, "Wino")
 
-        # 4. Usuwanie (TYMCZASOWO WYŁĄCZONE - problem z sesją)
-        # remove_from_cart_test(driver)
+        # 3. Usuwanie
+        remove_from_cart_test(driver)
+
+        # 4. Rejestracja
+        registration_test(driver, email)
+
+        # 4a. Dodanie adresu do profilu (WYMAGANE przed checkout)
+        add_address_test(driver)
 
         # 5. Zakup
-        order_ref = process_of_buying_test(driver)
+        process_of_buying_test(driver)
 
         # 6. Status i Faktura
         check_status_and_invoice_test(driver)
@@ -404,7 +352,3 @@ def run_tests():
 
 if __name__ == "__main__":
     run_tests()
-
-    #   python3 -m venv venv
-    #   source venv/bin/activate
-    #   pip install selenium

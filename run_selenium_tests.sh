@@ -11,7 +11,7 @@ echo "=================================="
 echo ""
 
 # Проверка доступности магазина
-SHOP_URL="http://127.0.0.1"
+SHOP_URL="http://localhost:8080"
 echo "🔍 Проверка доступности магазина: ${SHOP_URL}"
 if curl -s --head --fail "${SHOP_URL}" > /dev/null; then
     echo "✅ Магазин доступен"
